@@ -27,7 +27,7 @@ Ad esempio, a seguito del click sul link “sposta” associato alla categoria �
         - 911 Divinità del cielo >>sposta qui
             - 9111 Giove
                 - 91111 Attributi di Giove
-                - 9112 Giunone >>sposta qui
+            - 9112 Giunone >>sposta qui
         - 912 Divinità degli inferi >>sposta qui
             - 9121 Plutone >>sposta qui
             - 9122 Ecate >>sposta qui
