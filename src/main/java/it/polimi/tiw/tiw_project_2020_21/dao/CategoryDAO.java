@@ -19,7 +19,7 @@ public class CategoryDAO
     public ArrayList<Category> findAllCategories() throws SQLException
     {
         ArrayList<Category> categories;
-        String query = "SELECT * FROM level_0 ORDER BY last_modified DESC";
+        String query = "SELECT * FROM level_0 ORDER BY last_modified ASC";
         try (ResultSet resultSet = connection.prepareStatement(query).executeQuery())
         {
             categories = new ArrayList<>();
@@ -37,7 +37,7 @@ public class CategoryDAO
     public ArrayList<Category> findAllSubCategory(Category parent, int level) throws  SQLException
     {
         ArrayList<Category> categories;
-        String query = "SELECT * FROM level_" + level + " WHERE parent = '" + parent.getName() + "' ORDER BY last_modified DESC";
+        String query = "SELECT * FROM level_" + level + " WHERE parent = '" + parent.getName() + "' ORDER BY last_modified ASC";
         if(tableExistsSQL(connection,"level_"+level))
         {
             try (ResultSet resultSet = connection.prepareStatement(query).executeQuery())

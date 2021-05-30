@@ -6,9 +6,9 @@
 </head>
 <body>
 <a href="get-categories">getCategories</a>
-<section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}">a</section>
+<section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
 <h4><i>Login</i></h4>
-<form th:action="@{/login-servlet}" method="post">
+<form th:action="@{/CreateCategory}" method="post">
   <input type="text" name="username">
   <input type="password" name="password">
   <input type="submit" value="login">
