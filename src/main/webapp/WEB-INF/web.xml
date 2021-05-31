@@ -16,7 +16,7 @@
 
     <context-param>
         <param-name>dbUrl</param-name>
-        <param-value>jdbc:mysql://localhost:3306/new_schema</param-value>
+        <param-value>jdbc:mysql://localhost:3306/tiw_2021</param-value>
     </context-param>
     <context-param>
         <param-name>dbUser</param-name>
@@ -31,15 +31,14 @@
         <param-value>com.mysql.cj.jdbc.Driver</param-value>
     </context-param>
 
-    <!--<filter>
+    <filter>
         <filter-name>Checker</filter-name>
         <filter-class>it.polimi.tiw.tiw_project_2020_21.filters.Checker</filter-class>
     </filter>
 
     <filter-mapping>
         <filter-name>Checker</filter-name>
-        <servlet-name>LoginServlet</servlet-name>
         <servlet-name>CreateCategory</servlet-name>
         <servlet-name>GoToHomepage</servlet-name>
-    </filter-mapping> -->
+    </filter-mapping>
 </web-app>

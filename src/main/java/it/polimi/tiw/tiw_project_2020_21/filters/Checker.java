@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,10 +46,9 @@ public class Checker implements Filter {
 
         System.out.print("Login checker filter executing ...\n");
 
-        // java.lang.String loginpath = "/index.html";
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        String loginpath = req.getServletContext().getContextPath() + "/index.jsp";
+        String loginpath = req.getServletContext().getContextPath() + "/login.jsp";
 
         HttpSession s = req.getSession();
         if (s.isNew() || s.getAttribute("user") == null) {

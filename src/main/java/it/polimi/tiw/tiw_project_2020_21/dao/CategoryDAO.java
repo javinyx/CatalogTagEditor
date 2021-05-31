@@ -79,7 +79,7 @@ public class CategoryDAO
     }
 
     private void createNewTable(int level) throws SQLException {
-        String query = "CREATE TABLE `new_schema`.`level_" + level + "` (\n" +
+        String query = "CREATE TABLE `level_" + level + "` (\n" +
                         "  `name` VARCHAR(100) NOT NULL,\n" +
                         "  `parent` VARCHAR(100) NOT NULL,\n" +
                         "  `last_modified` DATETIME NOT NULL,\n" +
