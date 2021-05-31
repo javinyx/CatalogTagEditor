@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet("/CreateCategory")
+@WebServlet(name = "CreateCategory", value = "/CreateCategory")
 public class CreateCategory extends HttpServlet
 {
     private static Connection connection;
