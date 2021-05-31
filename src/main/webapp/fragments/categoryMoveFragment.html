@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+<section th:fragment="category">
+    <ul>
+        <!--/*@thymesVar id="maincategories" type="java.util.ArrayList<it.polimi.tiw.tiw_project_2020_21.beans.Category>"*/-->
+        <li th:each="cat : ${maincategories}" th:with="found=(${#strings.startsWith(#strings.toString(cat.getId()), param.toMove)})? 'true'">
+            <!--/*@thymesVar id="cat" type="it.polimi.tiw.tiw_project_2020_21.beans.Category"*/-->
+            <span  th:style="${#strings.startsWith(#strings.toString(cat.getId()), param.toMove)}? 'color:red'" th:text="${cat.getId()} + '-' + ${cat.getName()}">Main Cat</span><a th:text="${found}? '' : ' >>>sposta qui'" th:href="${found}? '#': @{/MoveCategory(parent=${cat.getId()})}"> >>sposta qui</a>
+            <section th:insert="fragments/categoryMoveFragment :: category" th:with="maincategories=${cat.getSubCategories()}, found=${found}"></section>
+        </li>
+    </ul>
+</section>
+</body>
+</html>

@@ -8,7 +8,7 @@
 <section th:fragment="category">
   <ul>
     <li th:each="cat : ${maincategories}">
-      <span th:text="${cat.getId()} + '-' + ${cat.getName()}">Main Cat</span>
+      <span th:text="${cat.getId()} + '-' + ${cat.getName()}">Main Cat</span><a th:href="@{/GoToMoveCategory(toMove=${cat.getId()})}"> >>sposta</a>
       <section th:insert="fragments/categoryFragment :: category" th:with="maincategories=${cat.getSubCategories()}"></section>
     </li>
   </ul>
