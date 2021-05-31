@@ -58,6 +58,36 @@ public class CategoryDAO
         return null;
     }
 
+    public void createNewCategory(String name, String level, String parentName) throws SQLException
+    {
+        int lvl = Integer.parseInt(level) + 1;
+        String query;
+        if(lvl > 0)
+        {
+            if(!tableExistsSQL(connection,"level_"+lvl))
+            {
+                createNewTable(lvl);
+            }
+            query = "insert into level_"+ lvl +" values('"+ name +"', '" + parentName + "', now())";
+        }
+        else
+        {
+            query = "insert into level_"+ lvl +" values('"+ name +"', now())";
+        }
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.executeUpdate();
+    }
+
+    private void createNewTable(int level) throws SQLException {
+        String query = "CREATE TABLE `new_schema`.`level_" + level + "` (\n" +
+                        "  `name` VARCHAR(100) NOT NULL,\n" +
+                        "  `parent` VARCHAR(100) NOT NULL,\n" +
+                        "  `last_modified` DATETIME NOT NULL,\n" +
+                        "  PRIMARY KEY (`name`),\n" +
+                        "  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE);";
+        connection.prepareStatement(query).executeUpdate();
+    }
+
     static boolean tableExistsSQL(Connection connection, String tableName) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT count(*) "
                 + "FROM information_schema.tables "

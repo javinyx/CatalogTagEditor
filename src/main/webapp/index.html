@@ -5,13 +5,19 @@
   <title>Title</title>
 </head>
 <body>
-<a href="get-categories">getCategories</a>
 <section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
-<h4><i>Login</i></h4>
+<h4><i>Create Category</i></h4>
 <form th:action="@{/CreateCategory}" method="post">
-  <input type="text" name="username">
-  <input type="password" name="password">
-  <input type="submit" value="login">
+  <label>Category name
+    <input type="text" name="categoryName" required>
+  </label>
+  <label>Parent Category
+    <select name="categoryParent">
+      <option value="-1 root">  ---  </option>
+      <section th:insert="fragments/categoryDropdownFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
+    </select>
+  </label>
+  <input type="submit" value="create">
   <!--/*@thymesVar id="error" type=""*/-->
   <span class="error" th:text="${error}"></span>
 </form>

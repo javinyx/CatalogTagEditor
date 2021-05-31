@@ -1,5 +1,6 @@
 package it.polimi.tiw.tiw_project_2020_21.controllers;
 
+import it.polimi.tiw.tiw_project_2020_21.dao.CategoryDAO;
 import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
 import org.thymeleaf.TemplateEngine;
 
@@ -8,25 +9,45 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 @WebServlet("/CreateCategory")
 public class CreateCategory extends HttpServlet
 {
     private static Connection connection;
-    private static TemplateEngine templateEngine;
 
     @Override
-    public void init() {
+    public void init()
+    {
         connection = Initializer.connectionInit(getServletContext());
-        templateEngine = Initializer.templateEngineInit(getServletContext());
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
-
+        HttpSession session = request.getSession();
+        String name = request.getParameter("categoryName");
+        String categoryParent = request.getParameter("categoryParent");
+        CategoryDAO categoryDAO = new CategoryDAO(connection);
+        System.out.println();
+        if(name.equals("")) {
+            session.setAttribute("newCategoryError", "Fields must not be empty!");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomepage");
+            return;
+        }
+        try {
+            categoryDAO.createNewCategory(name, categoryParent.split(" ", 2)[0], categoryParent.split(" ", 2)[1]);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to create a new category!");
+            return;
+        }
+        session.removeAttribute("newCategoryError");
+        response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
     }
 
     @Override
