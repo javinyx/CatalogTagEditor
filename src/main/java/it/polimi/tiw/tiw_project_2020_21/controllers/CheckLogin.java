@@ -63,7 +63,7 @@ public class CheckLogin extends HttpServlet {
 
         String path = getServletContext().getContextPath();
         if (user == null) {
-            path = getServletContext().getContextPath() + "/login.jsp";
+            path = getServletContext().getContextPath() + "/login.html";
         } else {
             request.getSession().setAttribute("user", user);
             String target = "/GoToHomePage";
