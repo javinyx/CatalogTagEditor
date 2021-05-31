@@ -40,5 +40,6 @@
         <filter-name>Checker</filter-name>
         <servlet-name>CreateCategory</servlet-name>
         <servlet-name>GoToHomepage</servlet-name>
+        <servlet-name>GoToMoveCategory</servlet-name>
     </filter-mapping>
 </web-app>
