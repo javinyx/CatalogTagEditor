@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
+<h4><i>Create Category</i></h4>
+<form th:action="@{/CreateCategory}" method="post">
+  <label>Category name
+    <input type="text" name="categoryName" required>
+  </label>
+  <label>Parent Category
+    <select name="categoryParent">
+      <option value="-1 root">  ---  </option>
+      <section th:insert="fragments/categoryDropdownFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
+    </select>
+  </label>
+  <input type="submit" value="create">
+  <!--/*@thymesVar id="error" type=""*/-->
+  <span class="error" th:text="${error}"></span>
+</form>
+</body>
+</html>

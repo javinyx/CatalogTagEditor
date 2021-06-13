@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h4><i>Create a new album</i></h4>
+<div class="forms">
+  <form th:action="@{/CreateNewAlbum}" method="post">
+    <div class="form-group">
+      <label>Album title
+        <input type="text" class="form-control" name="title" required></label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form><br>
+  <span th:class="${!session.newAlbumErr.isEmpty() ? 'alert alert-danger' : ''}" th:text="${session.newAlbumErr}"></span>
+</div>
+</body>
+</html>
