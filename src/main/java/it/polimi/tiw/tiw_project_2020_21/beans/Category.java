@@ -6,15 +6,14 @@ import java.util.Date;
 public class Category
 {
     private int id;
-    private int level;
+    private int databaseId;
     private String name;
-    private Date lastModifiedDate;
     private ArrayList<Category> subCategories = new ArrayList<>();
 
-    public Category(int id, int level, String name) {
+    public Category(int id, String name, int databaseId) {
         this.id = id;
-        this.level = level;
         this.name = name;
+        this.databaseId = databaseId;
     }
 
     public int getId() {
@@ -24,6 +23,13 @@ public class Category
         this.id = id;
     }
 
+    public int getDatabaseId() {
+        return databaseId;
+    }
+    public void setDatabaseId(int databaseId) {
+        this.databaseId = databaseId;
+    }
+
     public String getName()
     {
         return name;
@@ -31,22 +37,6 @@ public class Category
     public void setName(String name)
     {
         this.name = name;
-    }
-
-    public int getLevel()
-    {
-        return level;
-    }
-    public void setLevel(int level)
-    {
-        this.level = level;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public ArrayList<Category> getSubCategories() {

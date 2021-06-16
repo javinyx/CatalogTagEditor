@@ -3,7 +3,6 @@ package it.polimi.tiw.tiw_project_2020_21.controllers;
 import it.polimi.tiw.tiw_project_2020_21.beans.Category;
 import it.polimi.tiw.tiw_project_2020_21.dao.CategoryDAO;
 import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletException;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -21,58 +19,42 @@ import java.util.ArrayList;
 public class MoveCategory extends HttpServlet
 {
     private static Connection connection;
-    private static TemplateEngine templateEngine;
 
     @Override
     public void init() {
         connection = Initializer.connectionInit(getServletContext());
-        templateEngine = Initializer.templateEngineInit(getServletContext());
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
-        ArrayList<Category> categories = null;
+        ArrayList<Category> categories;
         int parentId = Integer.parseInt(request.getParameter("newParent"));
         int toMoveId = Integer.parseInt(request.getParameter("toMove"));
         Category newParent;
-        Category category = null;
-        CategoryDAO categoryDAO = new CategoryDAO(connection);
+        Category category;
         try
         {
+            CategoryDAO categoryDAO = new CategoryDAO(connection);
+            categories = categoryDAO.findAllCategories();
+            category = categoryDAO.findCategory(toMoveId, categories.get(0).getSubCategories());
             if (parentId == 0)
             {
                 //move to root
-                newParent = new Category(0, -1, "root");
+                newParent = new Category(0, "root", 0);
             }
             else
             {
-                categories = categoryDAO.findAllCategories();
-                category = categoryDAO.findCategory(toMoveId, categories);
-                newParent = categoryDAO.findCategory(parentId, categories);
+                newParent = categoryDAO.findCategory(parentId, categories.get(0).getSubCategories());
             }
-            if (newParent == null || category == null)
-            {
-                //we have a problem
-            }
-            if(newParent.getLevel() + 1 == category.getLevel())
-            {
-                //only need to update the first father because the level is the same -> children are in the same levels
-                categoryDAO.updateFather(category.getName(), category.getLevel(), newParent.getName());
-            }
-            else
-            {
-                categoryDAO.moveCategory(category,  newParent.getLevel(), newParent.getName());
-            }
+            categoryDAO.moveCategory(category.getDatabaseId(),  newParent.getDatabaseId());
         }catch (SQLException e)
         {
             e.printStackTrace();
         }
         response.sendRedirect(getServletContext().getContextPath() + "/");
     }
-
-
 
     @Override
     public void destroy() {

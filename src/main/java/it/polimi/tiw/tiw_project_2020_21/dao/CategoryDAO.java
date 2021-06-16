@@ -18,115 +18,56 @@ public class CategoryDAO
     }
     public ArrayList<Category> findAllCategories() throws SQLException
     {
-        ArrayList<Category> categories;
-        String query = "SELECT * FROM level_0 ORDER BY last_modified ASC";
-        try (ResultSet resultSet = connection.prepareStatement(query).executeQuery())
-        {
-            categories = new ArrayList<>();
-            int count = 1;
-            while (resultSet.next())
-            {
-                Category category = new Category(count, 0, resultSet.getString(1));
-                category.setSubCategories(findAllSubCategory(category, 1));
-                categories.add(category);
-                count++;
-            }
-        }
+        ArrayList<Category> categories = new ArrayList<Category>();
+        Category root = new Category(0, "root", 0);
+        root.setSubCategories(findAllChildrenCategory(0, 0));
+        categories.add(root);
         return categories;
     }
-    public ArrayList<Category> findAllSubCategory(Category parent, int level) throws  SQLException
+
+    public ArrayList<Category> findAllChildrenCategory(int parentID, int parentCount) throws SQLException
     {
         ArrayList<Category> categories;
-        String query = "SELECT * FROM level_" + level + " WHERE parent = '" + parent.getName() + "' ORDER BY last_modified ASC";
-        if(tableExistsSQL(connection,"level_"+level))
+        String query = "SELECT * FROM categories WHERE parent_id = ? ORDER BY last_modified ASC";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query))
         {
-            try (ResultSet resultSet = connection.prepareStatement(query).executeQuery())
-            {
+            preparedStatement.setInt(1, parentID);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 int count = 1;
-
                 categories = new ArrayList<>();
-                while (resultSet.next())
-                {
-                    Category category = new Category(parent.getId()*10 + count, level, resultSet.getString(1));
-                    category.setSubCategories(findAllSubCategory(category, level+1));
+                while (resultSet.next()) {
+                    Category category = new Category(parentCount * 10 + count, resultSet.getString("name"), resultSet.getInt("id"));
+                    category.setSubCategories(findAllChildrenCategory(category.getDatabaseId(), category.getId()));
                     categories.add(category);
                     count++;
                 }
             }
-            return categories;
         }
-        return null;
+        return categories;
     }
-
-    public void createNewCategory(String name, int parentLevel, String parentName) throws SQLException
+    public void createNewCategory(String name, int parentDatabaseId) throws SQLException
     {
-        int level = parentLevel + 1;
         String query;
-        if(level > 0)
-        {
-            if(!tableExistsSQL(connection,"level_"+level))
-            {
-                createNewTable(level);
-            }
-            query = "insert into level_"+ level +" values('"+ name +"', '" + parentName + "', now())";
-        }
-        else
-        {
-            query = "insert into level_"+ level +" values('"+ name +"', now())";
-        }
+        query = "insert into categories (name, last_modified, parent_id) values (?, now(), ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, name);
+        preparedStatement.setInt(2, parentDatabaseId);
         preparedStatement.executeUpdate();
     }
 
-    public void updateFather(String name, int level, String newParentName) throws SQLException
+    public void updateFather(int databaseId, int parentDatabaseId) throws SQLException
     {
         String query;
-        if (level == 0)
-            return;
-        if(tableExistsSQL(connection,"level_"+level))
-        {
-            query = "UPDATE level_" + level + " SET parent='" + newParentName + "' WHERE name='" + name + "'";
+            query = "UPDATE categories SET parent_id = ? WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, parentDatabaseId);
+            preparedStatement.setInt(2, databaseId);
             preparedStatement.executeUpdate();
-        }
     }
 
-    public void removeCategory(String name, int level) throws SQLException {
-        if(tableExistsSQL(connection,"level_"+level))
-        {
-            String query = "DELETE FROM level_" + level + " WHERE name ='" + name + "'";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    public void updateLevel(ArrayList<Category> categories, int newLevel, String parentName) throws SQLException
+    public void moveCategory(int databaseId, int parentDatabaseId) throws SQLException
     {
-        if (categories == null || categories.size() == 0)
-            return;
-        if(!tableExistsSQL(connection,"level_"+newLevel))
-        {
-            createNewTable(newLevel);
-        }
-        for (Category category: categories)
-        {
-            removeCategory(category.getName(), category.getLevel());
-            createNewCategory(category.getName(), newLevel-1, parentName);
-            //String query = "INSERT INTO level_" + newLevel + " (name, parent, last_modified)\n" +
-            //       "          SELECT name, parent, last_modified\n" +
-            //       "          FROM level_" + category.getLevel() + "\n" +
-            //       "          WHERE name='" + category.getName() +"' ; \n" +
-            //       "    DELETE FROM level_" + category.getLevel() + "\n" +
-            //       "          WHERE name='" + category.getName() +" ' ;";
-            updateLevel(category.getSubCategories(), newLevel + 1, category.getName());
-        }
-    }
-
-    public void moveCategory(Category category, int newParentLevel, String newParentName) throws SQLException
-    {
-        removeCategory(category.getName(), category.getLevel());
-        createNewCategory(category.getName(), newParentLevel, newParentName);
-        updateLevel(category.getSubCategories(), newParentLevel + 2, category.getName());
+        updateFather(databaseId, parentDatabaseId);
     }
 
     public Category findCategory(int id, ArrayList<Category> categories)
@@ -138,29 +79,8 @@ public class CategoryDAO
             if(categories.get(index-1).getId() == id)
                 return categories.get(index-1);
             categories = categories.get(index-1).getSubCategories();
-            idString = idString.substring(1, idString.length());
+            idString = idString.substring(1);
         }
         return null;
-    }
-    private void createNewTable(int level) throws SQLException {
-        String query = "CREATE TABLE `level_" + level + "` (\n" +
-                        "  `name` VARCHAR(100) NOT NULL,\n" +
-                        "  `parent` VARCHAR(100) NOT NULL,\n" +
-                        "  `last_modified` DATETIME NOT NULL,\n" +
-                        "  PRIMARY KEY (`name`),\n" +
-                        "  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE);";
-        connection.prepareStatement(query).executeUpdate();
-    }
-
-    static boolean tableExistsSQL(Connection connection, String tableName) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT count(*) "
-                + "FROM information_schema.tables "
-                + "WHERE table_name = ?"
-                + "LIMIT 1;");
-        preparedStatement.setString(1, tableName);
-
-        ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.next();
-        return resultSet.getInt(1) != 0;
     }
 }

@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet("/GoToMoveCategory")
+@WebServlet(name = "GoToMoveCategory" ,value = "/GoToMoveCategory")
 public class GoToMoveCategory extends HttpServlet
 {
     private static Connection connection;

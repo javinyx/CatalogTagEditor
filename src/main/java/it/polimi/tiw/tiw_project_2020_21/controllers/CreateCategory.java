@@ -31,8 +31,7 @@ public class CreateCategory extends HttpServlet
         HttpSession session = request.getSession();
         String name = request.getParameter("categoryName");
         String categoryParent = request.getParameter("categoryParent");
-        int parentLevel = Integer.parseInt(categoryParent.split(" ", 2)[0]);
-        String parentName = categoryParent.split(" ", 2)[1];
+        int parentDatabaseId = Integer.parseInt(categoryParent);
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
         if(name.equals("")) {
@@ -41,7 +40,7 @@ public class CreateCategory extends HttpServlet
             return;
         }
         try {
-            categoryDAO.createNewCategory(name, parentLevel, parentName);
+            categoryDAO.createNewCategory(name, parentDatabaseId);
         }
         catch (SQLException e) {
             e.printStackTrace();

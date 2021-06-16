@@ -7,7 +7,7 @@
 <body>
 <section th:fragment="category">
     <div th:each="cat : ${maincategories}">
-      <option th:value="${cat.getLevel()} + ' ' + ${cat.getName()}" th:text="${cat.getId()} + ' ' + ${cat.getName()}">Mainn Cat</option>
+      <option th:value="${cat.getDatabaseId()}" th:text="${cat.getId()} + ' ' + ${cat.getName()}">Mainn Cat</option>
       <section th:insert="fragments/categoryDropdownFragment :: category" th:with="maincategories=${cat.getSubCategories()}"></section>
     </div>
 </section>
