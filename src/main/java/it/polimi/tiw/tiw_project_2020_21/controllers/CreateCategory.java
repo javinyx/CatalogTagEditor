@@ -40,7 +40,7 @@ public class CreateCategory extends HttpServlet {
 
             try {
                 if (categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID is not valid");
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
                     return;
                 }
                 categoryDAO.createNewCategory(name, parentDatabaseId);
@@ -53,10 +53,9 @@ public class CreateCategory extends HttpServlet {
             response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
 
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Selected parent ID is not a valid number!");
         }
-
-
+        
     }
 
     @Override
