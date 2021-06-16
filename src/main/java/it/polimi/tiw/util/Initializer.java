@@ -1,4 +1,4 @@
-package it.polimi.tiw.tiw_project_RIA_2020_21.util;
+package it.polimi.tiw.util;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;

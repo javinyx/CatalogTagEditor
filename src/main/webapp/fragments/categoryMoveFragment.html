@@ -7,9 +7,9 @@
 <body>
 <section th:fragment="category">
     <ul>
-        <!--/*@thymesVar id="maincategories" type="java.util.ArrayList<it.polimi.tiw.tiw_project_RIA_2020_21.beans.Category>"*/-->
+        <!--/*@thymesVar id="maincategories" type="java.util.ArrayList<it.polimi.tiw.main.beans.Category>"*/-->
         <li th:each="cat : ${maincategories}" th:with="found=(${#strings.startsWith(#strings.toString(cat.getId()), param.toMove)})? 'true'">
-            <!--/*@thymesVar id="cat" type="it.polimi.tiw.tiw_project_RIA_2020_21.beans.Category"*/-->
+            <!--/*@thymesVar id="cat" type="it.polimi.tiw.main.beans.Category"*/-->
             <span  th:style="${#strings.startsWith(#strings.toString(cat.getId()), param.toMove)}? 'color:red'" th:text="${cat.getId()} + '-' + ${cat.getName()}">Main Cat</span><a th:text="${found}? '' : ' >>>sposta qui'" th:href="${found}? '#': @{/MoveCategory(newParent=${cat.getId()}, toMove=${param.toMove})}"> >>sposta qui</a>
             <section th:insert="fragments/categoryMoveFragment :: category" th:with="maincategories=${cat.getSubCategories()}, found=${found}"></section>
         </li>

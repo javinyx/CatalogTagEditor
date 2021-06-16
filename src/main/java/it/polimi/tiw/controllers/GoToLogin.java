@@ -1,6 +1,6 @@
-package it.polimi.tiw.tiw_project_RIA_2020_21.controllers;
+package it.polimi.tiw.controllers;
 
-import it.polimi.tiw.tiw_project_RIA_2020_21.util.Initializer;
+import it.polimi.tiw.util.Initializer;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 

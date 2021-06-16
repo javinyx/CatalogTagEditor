@@ -6,7 +6,7 @@
     <display-name>TIW-Exam-2021</display-name>
     <servlet>
         <servlet-name>GoToHomepage</servlet-name>
-        <servlet-class>it.polimi.tiw.tiw_project_RIA_2020_21.controllers.GoToHomepage</servlet-class>
+        <servlet-class>it.polimi.tiw.main.controllers.GoToHomepage</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>GoToHomepage</servlet-name>
@@ -16,7 +16,7 @@
 
     <context-param>
         <param-name>dbUrl</param-name>
-        <param-value>jdbc:mysql://localhost:3306/tiw_2021</param-value>
+        <param-value>jdbc:mysql://localhost:3306/tiw_2021?serverTimezone=UTC</param-value>
     </context-param>
     <context-param>
         <param-name>dbUser</param-name>
@@ -33,7 +33,7 @@
 
     <filter>
         <filter-name>Checker</filter-name>
-        <filter-class>it.polimi.tiw.tiw_project_RIA_2020_21.filters.Checker</filter-class>
+        <filter-class>it.polimi.tiw.main.filters.Checker</filter-class>
     </filter>
 
     <filter-mapping>

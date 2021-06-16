@@ -1,10 +1,11 @@
-package it.polimi.tiw.tiw_project_RIA_2020_21.util;
+package it.polimi.tiw.util;
 
-import it.polimi.tiw.tiw_project_RIA_2020_21.dao.UserDAO;
+import it.polimi.tiw.dao.UserDAO;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package it.polimi.tiw.tiw_project_RIA_2020_21.beans;
+package it.polimi.tiw.beans;
 
 public class User {
     private String username;
