@@ -15,45 +15,48 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet(name = "CreateCategory", value = "/CreateCategory")
-public class CreateCategory extends HttpServlet
-{
+public class CreateCategory extends HttpServlet {
     private static Connection connection;
 
     @Override
-    public void init()
-    {
+    public void init() {
         connection = Initializer.connectionInit(getServletContext());
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
-    {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         String name = request.getParameter("categoryName");
         String categoryParent = request.getParameter("categoryParent");
-        int parentDatabaseId = Integer.parseInt(categoryParent);
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
-        if(name.equals("")) {
+        if (name.equals("") || name.length() > 50 || categoryParent == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
             return;
         }
 
         try {
-            if(categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null)
-            {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
+            int parentDatabaseId = Integer.parseInt(categoryParent);
+
+            try {
+                if (categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID is not valid");
+                    return;
+                }
+                categoryDAO.createNewCategory(name, parentDatabaseId);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to create a new category!");
                 return;
             }
-            categoryDAO.createNewCategory(name, parentDatabaseId);
+            session.removeAttribute("newCategoryError");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to create a new category!");
-            return;
-        }
-        session.removeAttribute("newCategoryError");
-        response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+
+
     }
 
     @Override
