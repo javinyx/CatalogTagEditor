@@ -83,4 +83,15 @@ public class CategoryDAO
         }
         return null;
     }
+
+    public Category findCategoryDatabaseId(int id, ArrayList<Category> categories)
+    {
+        for (Category category: categories)
+        {
+            if(category.getDatabaseId() == id)
+                return category;
+            return findCategoryDatabaseId(id, category.getSubCategories());
+        }
+        return null;
+    }
 }

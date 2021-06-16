@@ -35,11 +35,16 @@ public class CreateCategory extends HttpServlet
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
         if(name.equals("")) {
-            session.setAttribute("newCategoryError", "Fields must not be empty!");
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomepage");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
             return;
         }
+
         try {
+            if(categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null)
+            {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
+                return;
+            }
             categoryDAO.createNewCategory(name, parentDatabaseId);
         }
         catch (SQLException e) {

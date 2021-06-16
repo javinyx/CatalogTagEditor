@@ -48,6 +48,10 @@ public class MoveCategory extends HttpServlet
             {
                 newParent = categoryDAO.findCategory(parentId, categories.get(0).getSubCategories());
             }
+            if (category == null || newParent == null)
+            {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
+            }
             categoryDAO.moveCategory(category.getDatabaseId(),  newParent.getDatabaseId());
         }catch (SQLException e)
         {
