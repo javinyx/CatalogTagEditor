@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link href="css/style.css" rel="stylesheet">
   <script src="js/jquery-3.6.0.min.js"></script>
   <script src="js/index.js"></script>
   <meta charset="UTF-8">
@@ -8,6 +9,7 @@
 </head>
 <body>
 <p id="welcome-message"></p>
+<div id="category-list-div"></div>
 <h4><i>Create Category</i></h4>
 <form method="post">
   <label>Category name
@@ -18,9 +20,8 @@
       <option value="-1 root">---</option>
     </select>
   </label>
-  <input type="submit" value="create">
+  <input type="submit" value="Create">
   <span class="error"></span>
-  <div id="categoryList"></div>
 </form>
 </body>
 </html>

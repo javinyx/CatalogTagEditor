@@ -1,37 +1,16 @@
-
 $(document).ready(function () {
     $.ajax({
         type: "GET",
-        url: 'ciao',
+        url: 'GetCategories',
         success: function (response) {
-            response.forEach(function (item, value) {
-                let categoryListElement = document.createElement("li");
-                categoryListElement.id = item.id;
-                categoryListElement.dataset.itemid = item.id;
-                categoryListElement.className = "category";
+            let categoriesArray = JSON.parse(response);
+            console.log(response);
 
-                categoryListElement.appendChild(document.createTextNode(item.name));
-
-                let subCategoryListContainer = document.createElement("ul");
-                if (item.level > 0) { // subCategoryList.length
-                    item.parent.forEach(function (item1, value1) {
-                        let subCategoryListElement = document.createElement("li");
-                        subCategoryListElement.id = item1.id;
-                        subCategoryListElement.dataset.name = item1.name;
-                        subCategoryListElement.dataset.itemid = item1.id;
-                        subCategoryListElement.setAttribute("draggable", 'true');
-                        subCategoryListElement.className = "subCategory";
-                    })
-                }
-
-                categoryListElement.appendChild(subCategoryListContainer);
-                // this syntax is equivalent to `document.getElementById()`
-                $("#categoryList").append(categoryListElement);
-            })
+            printCategories(categoriesArray, document.getElementById("category-list-div"));
         },
         statusCode: {
             404: function () {
-                console.log("404")
+                alert("Couldn't reach the endpoint")
             }
             // this function is run if the server responds with an error code
             /*document.getElementById("error-message").textContent = response.responseText;
@@ -110,4 +89,28 @@ $(document).ready(function () {
 function handleLogout() {
     sessionStorage.clear();
     window.location.href = '/Logout';
+}
+
+function printCategories(categoriesArray, parentElement) {
+    let categoriesList = document.createElement("ul");
+    parentElement.appendChild(categoriesList);
+    // categoriesList.id = "category-list-ul";
+    // categoriesList.dataset.itemid = "category-list-ul";
+    categoriesList.className = "category";
+
+    for (let i = 0; i < categoriesArray.length; i++) {
+        let categoryListElement = document.createElement("li");
+        categoriesList.appendChild(categoryListElement);
+        categoryListElement.appendChild(document.createTextNode(categoriesArray[i].name));
+        console.log("Appending " + categoriesArray[i].name);
+        try {
+            for(let j = 0; j < categoriesArray[i].subCategories.length; j++) {
+                console.log("Child :" + categoriesArray[i].subCategories[j].name);
+            }
+        } catch(error) {
+            console.log("Tried to print an undefined child");
+        }
+        printCategories(categoriesArray[i].subCategories, categoriesList);
+    }
+
 }
