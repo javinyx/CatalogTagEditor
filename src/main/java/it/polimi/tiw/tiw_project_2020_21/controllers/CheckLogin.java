@@ -22,7 +22,6 @@ public class CheckLogin extends HttpServlet {
 
     public CheckLogin() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public void init() {
@@ -31,7 +30,6 @@ public class CheckLogin extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // TODO Auto-generated method stub
         response.getWriter().append("Served at: ").append(request.getContextPath());
     }
 
@@ -63,7 +61,6 @@ public class CheckLogin extends HttpServlet {
             response.sendRedirect(path);
             return;
         }
-
 
         if (user == null)
         {
