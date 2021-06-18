@@ -58,7 +58,7 @@ public class CategoryDAO
     public void updateFather(int databaseId, int parentDatabaseId) throws SQLException
     {
         String query;
-            query = "UPDATE categories SET parent_id = ? WHERE id = ?";
+            query = "UPDATE categories SET parent_id = ?, last_modified = NOW()  WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, parentDatabaseId);
             preparedStatement.setInt(2, databaseId);
