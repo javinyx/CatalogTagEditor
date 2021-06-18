@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet(name = "GoToHomePage" ,value = "/GoToHomepage")
+@WebServlet(name = "GoToHomepage" ,value = "/GoToHomepage")
 public class GoToHomepage extends HttpServlet
 {
     private static Connection connection;
