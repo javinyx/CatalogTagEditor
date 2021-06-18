@@ -38,7 +38,7 @@ public class CheckLogin extends HttpServlet {
         HttpSession session = request.getSession();
         String usrn = request.getParameter("username");
         String pwd = request.getParameter("pwd");
-        String path = getServletContext().getContextPath() + "/login.html";
+        String path = getServletContext().getContextPath();
         if (usrn == null || usrn.isEmpty() || pwd == null || pwd.isEmpty())
         {
             session.setAttribute("loginError", "Missing parameter. Error " + HttpServletResponse.SC_BAD_REQUEST);
@@ -67,7 +67,7 @@ public class CheckLogin extends HttpServlet {
         } else
         {
             request.getSession().setAttribute("user", user);
-            String target = "/GoToHomePage";
+            String target = "/GoToHomepage";
             path = path + target;
             session.removeAttribute("loginError");
         }
