@@ -13,13 +13,12 @@
   </label>
   <label>Parent Category
     <select name="categoryParent">
-      <option value="0">  ---  </option>
       <section th:insert="fragments/categoryDropdownFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
     </select>
   </label>
   <input type="submit" value="create">
-  <!--/*@thymesVar id="error" type=""*/-->
-  <span class="error" th:text="${error}"></span>
+  <br>
+  <span style="color: red" th:text="${session.newCategoryError}">newCategoryError</span>
 </form>
 </body>
 </html>

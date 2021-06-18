@@ -2,9 +2,6 @@ package it.polimi.tiw.tiw_project_2020_21.controllers;
 
 import it.polimi.tiw.tiw_project_2020_21.dao.CategoryDAO;
 import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
-import org.thymeleaf.TemplateEngine;
-
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,47 +12,48 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet(name = "CreateCategory", value = "/CreateCategory")
-public class CreateCategory extends HttpServlet {
+public class CreateCategory extends HttpServlet
+{
     private static Connection connection;
 
     @Override
-    public void init() {
+    public void init()
+    {
         connection = Initializer.connectionInit(getServletContext());
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         HttpSession session = request.getSession();
         String name = request.getParameter("categoryName");
         String categoryParent = request.getParameter("categoryParent");
+        int parentDatabaseId = Integer.parseInt(categoryParent);
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
         if (name.equals("") || name.length() > 50 || categoryParent == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
+            session.setAttribute("newCategoryError", "New category name must not be empty");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
             return;
         }
 
         try {
-            int parentDatabaseId = Integer.parseInt(categoryParent);
-
-            try {
-                if (categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
-                    return;
-                }
-                categoryDAO.createNewCategory(name, parentDatabaseId);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to create a new category!");
+            if(categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null)
+            {
+                session.setAttribute("newCategoryError", "Parent value is not correct");
+                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
                 return;
             }
-            session.removeAttribute("newCategoryError");
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
-
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Selected parent ID is not a valid number!");
+            categoryDAO.createNewCategory(name, parentDatabaseId);
         }
-        
+        catch (SQLException e) {
+            e.printStackTrace();
+            session.setAttribute("newCategoryError", "Could not create new category\n" + e.getErrorCode());
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            return;
+        }
+        session.removeAttribute("newCategoryError");
+        response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
     }
 
     @Override

@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,46 +29,51 @@ public class CheckLogin extends HttpServlet {
         connection = Initializer.connectionInit(getServletContext());
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         // TODO Auto-generated method stub
         response.getWriter().append("Served at: ").append(request.getContextPath());
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        HttpSession session = request.getSession();
         String usrn = request.getParameter("username");
         String pwd = request.getParameter("pwd");
-
-        if (usrn == null || usrn.isEmpty() || pwd == null || pwd.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+        String path = getServletContext().getContextPath() + "/login.html";
+        if (usrn == null || usrn.isEmpty() || pwd == null || pwd.isEmpty())
+        {
+            //response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+            session.setAttribute("loginError", "Missing parameter. Error " + HttpServletResponse.SC_BAD_REQUEST);
+            response.sendRedirect("GoToLogin");
             return;
         }
 
         UserDAO userDAO = new UserDAO(connection);
 
-        User user = null;
+        User user;
         try {
             System.out.println("Trying to check credentials...");
             user = userDAO.checkCredentials(usrn, pwd);
             System.out.println("Credentials checked");
-        } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database credential checking");
+        } catch (SQLException e)
+        {
+            //response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database credential checking");
+            session.setAttribute("loginError", "Failure in database credential checking. Error " + HttpServletResponse.SC_BAD_GATEWAY);
+            response.sendRedirect(path);
             return;
         }
 
-        // Tries to close connection from db after executing the query
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException sqle) {}
 
-        String path = getServletContext().getContextPath();
-        if (user == null) {
-            path = getServletContext().getContextPath() + "/login.html";
-        } else {
+        if (user == null)
+        {
+            session.setAttribute("loginError", "Incorrect username or password.");
+        } else
+        {
             request.getSession().setAttribute("user", user);
             String target = "/GoToHomePage";
             path = path + target;
+            session.removeAttribute("loginError");
         }
         response.sendRedirect(path);
     }

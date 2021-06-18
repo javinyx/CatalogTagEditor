@@ -18,7 +18,7 @@ public class CategoryDAO
     }
     public ArrayList<Category> findAllCategories() throws SQLException
     {
-        ArrayList<Category> categories = new ArrayList<Category>();
+        ArrayList<Category> categories = new ArrayList<>();
         Category root = new Category(0, "root", 0);
         root.setSubCategories(findAllChildrenCategory(0, 0));
         categories.add(root);
@@ -28,7 +28,7 @@ public class CategoryDAO
     public ArrayList<Category> findAllChildrenCategory(int parentID, int parentCount) throws SQLException
     {
         ArrayList<Category> categories;
-        String query = "SELECT * FROM categories WHERE parent_id = ? ORDER BY last_modified ASC";
+        String query = "SELECT * FROM categories WHERE parent_id = ? ORDER BY last_modified";
         try(PreparedStatement preparedStatement = connection.prepareStatement(query))
         {
             preparedStatement.setInt(1, parentID);
@@ -58,11 +58,11 @@ public class CategoryDAO
     public void updateFather(int databaseId, int parentDatabaseId) throws SQLException
     {
         String query;
-            query = "UPDATE categories SET parent_id = ? WHERE id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, parentDatabaseId);
-            preparedStatement.setInt(2, databaseId);
-            preparedStatement.executeUpdate();
+        query = "UPDATE categories SET parent_id = ? WHERE id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, parentDatabaseId);
+        preparedStatement.setInt(2, databaseId);
+        preparedStatement.executeUpdate();
     }
 
     public void moveCategory(int databaseId, int parentDatabaseId) throws SQLException
@@ -90,7 +90,9 @@ public class CategoryDAO
         {
             if(category.getDatabaseId() == id)
                 return category;
-            return findCategoryDatabaseId(id, category.getSubCategories());
+            Category temp = findCategoryDatabaseId(id, category.getSubCategories());
+            if(temp != null)
+                return temp;
         }
         return null;
     }
