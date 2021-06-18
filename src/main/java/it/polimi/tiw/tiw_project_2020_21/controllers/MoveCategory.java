@@ -30,8 +30,8 @@ public class MoveCategory extends HttpServlet
     {
         HttpSession session = request.getSession();
         ArrayList<Category> categories;
-        int parentId = 0;
-        int toMoveId = 0;
+        int parentId;
+        int toMoveId;
         try
         {
             parentId = Integer.parseInt(request.getParameter("newParent"));
