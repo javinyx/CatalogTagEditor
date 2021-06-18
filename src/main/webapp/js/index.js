@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-    updateViewCategories();
+    updateViewFromServer();
+    sessionStorage.setItem('storedChanges', '{"changes": []}');
 
     document.getElementById("submit-category").addEventListener("click", function () {
         alert(document.getElementById("create-category-form"));
@@ -11,11 +12,14 @@ $(document).ready(function () {
             url: 'CreateCategory',
             data: {"categoryName": categoryName, "categoryParent": categoryParent},
             success: function (response) {
-                updateViewCategories();
+                updateViewFromServer();
             }
         });
     })
 
+    document.getElementById("send-updates").addEventListener("click", function () {
+        sendUpdatesToServer();
+    })
 
     // set welcome message
     document.getElementById("welcome-message").textContent = `Welcome, ${sessionStorage.username}`;
@@ -64,14 +68,9 @@ $(document).ready(function () {
         if (event.target.className == "dropzone") {
             event.target.style.background = "";
 
-            $.ajax({
-                type: "GET",
-                url: 'MoveCategory',
-                data: {"toMove": dragged.value, "newParent": event.target.value},
-                success: function (response) {
-                    updateViewCategories();
-                }
-            });
+            updateViewFromClient(dragged.value, event.target.value);
+            saveLocalChanges(dragged.value, 0, event.target.value, 0);
+
         }
     }, false);
 });
@@ -115,7 +114,7 @@ function fillCategoriesDropdown(categoriesArray) {
     }
 }
 
-function updateViewCategories() {
+function updateViewFromServer() {
     document.getElementById("category-list-div").innerHTML = "";
     document.getElementById("categoryParent").innerHTML = "";
     $.ajax({
@@ -126,11 +125,40 @@ function updateViewCategories() {
             console.log(response);
             fillCategoriesDropdown(categoriesArray);
             printCategories(categoriesArray, document.getElementById("category-list-div"));
+            sessionStorage.setItem('categories', response);
         },
         statusCode: {
             404: function () {
-                alert("Couldn't reach the endpoint")
+                alert("Couldn't reach the endpoint");
             }
         }
     });
 }
+
+function updateViewFromClient(categoryId, parentId) {
+    let categoriesArray = JSON.parse(sessionStorage.getItem('categories'));
+    // TODO logica per spostare le categorie in locale
+    printCategories(categoriesArray);
+}
+
+function sendUpdatesToServer() {
+    // TODO
+    /*$.ajax({
+        type: "POST",
+        url: 'MoveMultipleCategories',
+        data: {"changes":  JSON.stringify(sessionStorage.getItem('changes'))},
+        success: function (response) {
+            updateViewFromServer();
+        }
+    });*/
+
+    alert(sessionStorage.getItem('storedChanges'));
+}
+
+function saveLocalChanges(id, databaseId, parentId, parentDatabaseId) {
+    let localChanges = JSON.parse(sessionStorage.getItem('storedChanges')); // si romperà ??????
+    localChanges['changes'].push({"categoryId": id,"databaseId": databaseId, "parentId": parentId, "parentDatabaseId": parentDatabaseId});
+    sessionStorage.setItem('storedChanges', JSON.stringify(localChanges));
+    alert("Saved local changes");
+}
+
