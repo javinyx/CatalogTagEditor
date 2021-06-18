@@ -28,7 +28,17 @@ public class CreateCategory extends HttpServlet
         HttpSession session = request.getSession();
         String name = request.getParameter("categoryName");
         String categoryParent = request.getParameter("categoryParent");
-        int parentDatabaseId = Integer.parseInt(categoryParent);
+        int parentDatabaseId;
+        try
+        {
+            parentDatabaseId = Integer.parseInt(categoryParent);
+        }
+        catch (Exception e)
+        {
+            session.setAttribute("newCategoryError", "Parent value is not correct");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            return;
+        }
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
         if (name.equals("") || name.length() > 50 || categoryParent == null) {

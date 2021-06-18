@@ -41,7 +41,6 @@ public class CheckLogin extends HttpServlet {
         String path = getServletContext().getContextPath() + "/login.html";
         if (usrn == null || usrn.isEmpty() || pwd == null || pwd.isEmpty())
         {
-            //response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
             session.setAttribute("loginError", "Missing parameter. Error " + HttpServletResponse.SC_BAD_REQUEST);
             response.sendRedirect("GoToLogin");
             return;
