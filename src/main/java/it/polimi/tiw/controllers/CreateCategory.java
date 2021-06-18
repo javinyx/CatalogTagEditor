@@ -23,13 +23,20 @@ public class CreateCategory extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("STARTED CreateCategory...");
         HttpSession session = request.getSession();
         String name = request.getParameter("categoryName");
         String categoryParent = request.getParameter("categoryParent");
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
-        if (name.equals("") || name.length() > 50 || categoryParent == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
+        if (name.equals("")) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Name is empty!");
+            return;
+        } else if (name.length() > 50) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Name is too long!");
+            return;
+        } else if (categoryParent == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Specify a category parent!");
             return;
         }
 
@@ -38,7 +45,7 @@ public class CreateCategory extends HttpServlet {
 
             try {
                 if (categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request!");
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Couldn't find the parent category!");
                     return;
                 }
                 categoryDAO.createNewCategory(name, parentDatabaseId);
@@ -47,8 +54,8 @@ public class CreateCategory extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to create a new category!");
                 return;
             }
-            session.removeAttribute("newCategoryError");
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            /*session.removeAttribute("newCategoryError");
+            response.setStatus(200);*/
 
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Selected parent ID is not a valid number!");

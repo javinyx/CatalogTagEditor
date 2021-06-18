@@ -90,7 +90,10 @@ public class CategoryDAO
         {
             if(category.getDatabaseId() == id)
                 return category;
-            return findCategoryDatabaseId(id, category.getSubCategories());
+
+            Category temp = findCategoryDatabaseId(id, category.getSubCategories());
+            if (temp != null)
+                return temp;
         }
         return null;
     }

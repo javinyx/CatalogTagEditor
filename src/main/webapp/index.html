@@ -11,16 +11,15 @@
 <p id="welcome-message"></p>
 <div id="category-list-div"></div>
 <h4><i>Create Category</i></h4>
-<form method="post">
+<form id="create-category-form" name="create-category-form">
   <label>Category name
-    <input type="text" name="categoryName" required>
+    <input id="categoryName" type="text" name="categoryName" required>
   </label>
   <label>Parent Category
-    <select name="categoryParent">
-      <option value="-1 root">---</option>
+    <select id="categoryParent" name="categoryParent">
     </select>
   </label>
-  <input type="submit" value="Create">
+  <input id="submit-category" type="submit" value="Create">
   <span class="error"></span>
 </form>
 </body>

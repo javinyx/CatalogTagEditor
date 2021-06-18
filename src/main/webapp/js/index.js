@@ -5,19 +5,59 @@ $(document).ready(function () {
         success: function (response) {
             let categoriesArray = JSON.parse(response);
             console.log(response);
-
+            fillCategoriesDropdown(categoriesArray);
             printCategories(categoriesArray, document.getElementById("category-list-div"));
         },
         statusCode: {
             404: function () {
                 alert("Couldn't reach the endpoint")
             }
-            // this function is run if the server responds with an error code
-            /*document.getElementById("error-message").textContent = response.responseText;
-            window.location.href = 'index.html';
-            response.status.success*/
         }
     });
+
+    document.getElementById("submit-category").addEventListener("click", function () {
+        alert(document.getElementById("create-category-form"));
+        let categoryName = document.forms["create-category-form"]["categoryName"].value;
+        let categoryParent = document.forms["create-category-form"]["categoryParent"].value;
+        $.ajax({
+            type: "POST",
+            url: 'CreateCategory',
+            data: {"categoryName": categoryName, "categoryParent": categoryParent},
+            success: function (response) {
+                alert("Create success!");
+                $.ajax({
+                    type: "GET",
+                    url: 'GetCategories',
+                    success: function (response) {
+                        console.log("Printing categories");
+                        let categoriesArray = JSON.parse(response);
+                        printCategories(categoriesArray, document.getElementById("category-list-div"));
+                        alert("Get success!");
+                    },
+                    error: function (){
+                        alert("Something went wrong getting categories");
+                    },
+                    statusCode: {
+                        404: function () {
+                            alert("Couldn't reach the endpoint");
+                        }
+                    }
+                });
+            },
+            error: function (){
+                alert("Create error");
+            },
+            /*statusCode: {
+                400: function () {
+                    alert("Bad parameters, didn't create category");
+                },
+                404: function () {
+                    alert("Couldn't reach the endpoint");
+                }
+            }*/
+        });
+    })
+
 
     // set welcome message
     document.getElementById("welcome-message").textContent = `Welcome, ${sessionStorage.username}`;
@@ -94,23 +134,26 @@ function handleLogout() {
 function printCategories(categoriesArray, parentElement) {
     let categoriesList = document.createElement("ul");
     parentElement.appendChild(categoriesList);
-    // categoriesList.id = "category-list-ul";
-    // categoriesList.dataset.itemid = "category-list-ul";
     categoriesList.className = "category";
 
     for (let i = 0; i < categoriesArray.length; i++) {
         let categoryListElement = document.createElement("li");
         categoriesList.appendChild(categoryListElement);
-        categoryListElement.appendChild(document.createTextNode(categoriesArray[i].name));
-        console.log("Appending " + categoriesArray[i].name);
-        try {
-            for(let j = 0; j < categoriesArray[i].subCategories.length; j++) {
-                console.log("Child :" + categoriesArray[i].subCategories[j].name);
-            }
-        } catch(error) {
-            console.log("Tried to print an undefined child");
-        }
+        categoryListElement.appendChild(document.createTextNode(categoriesArray[i].id + " " + categoriesArray[i].name));
         printCategories(categoriesArray[i].subCategories, categoriesList);
     }
+}
 
+function fillCategoriesDropdown(categoriesArray) {
+    let categoryDropdownSelect = document.getElementById("categoryParent");
+    if (categoryDropdownSelect === null) {
+        alert("categoryDropdownSelect is null");
+    }
+    for (let i = 0; i < categoriesArray.length; i++) {
+        let categoryDropdownOption = document.createElement("option");
+        categoryDropdownOption.appendChild(document.createTextNode(categoriesArray[i].name));
+        categoryDropdownOption.value = categoriesArray[i].databaseId;
+        categoryDropdownSelect.appendChild(categoryDropdownOption);
+        fillCategoriesDropdown(categoriesArray[i].subCategories);
+    }
 }
