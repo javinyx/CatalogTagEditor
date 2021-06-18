@@ -7,6 +7,8 @@
 </head>
 <body>
 <section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
+<span style="color: red" th:text="${session.movementError}">movementError</span>
+<br>
 <h4><i>Create Category</i></h4>
 <form th:action="@{/CreateCategory}" method="post">
   <label>Category name

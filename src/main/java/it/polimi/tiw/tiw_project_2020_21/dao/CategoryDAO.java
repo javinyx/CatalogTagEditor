@@ -58,7 +58,7 @@ public class CategoryDAO
     public void updateFather(int databaseId, int parentDatabaseId) throws SQLException
     {
         String query;
-        query = "UPDATE categories SET parent_id = ? WHERE id = ?";
+        query = "UPDATE categories SET parent_id = ?, last_modified = NOW()  WHERE id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1, parentDatabaseId);
         preparedStatement.setInt(2, databaseId);
@@ -70,7 +70,7 @@ public class CategoryDAO
         updateFather(databaseId, parentDatabaseId);
     }
 
-    public Category findCategory(int id, ArrayList<Category> categories)
+    public Category findCategory(int id, ArrayList<Category> categories, int coso)
     {
         String idString = Integer.toString(id);
         while (idString.length() > 0)
@@ -95,5 +95,10 @@ public class CategoryDAO
                 return temp;
         }
         return null;
+    }
+
+    public boolean isParent(Category possibleChild, Category possibleParent)
+    {
+        return (Integer.toString(possibleChild.getId()).startsWith(Integer.toString(possibleParent.getId())));
     }
 }

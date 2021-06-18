@@ -30,35 +30,44 @@ public class MoveCategory extends HttpServlet
     {
         HttpSession session = request.getSession();
         ArrayList<Category> categories;
-        String param1 = request.getParameter("newParent");
-        String param2 = request.getParameter("toMove");
-        if (param1.startsWith(param2))
+        int parentId = 0;
+        int toMoveId = 0;
+        try
         {
-            session.setAttribute("movementError", "Cannot Move Element inside himself or children!");
+            parentId = Integer.parseInt(request.getParameter("newParent"));
+            toMoveId = Integer.parseInt(request.getParameter("toMove"));
+        }
+        catch (NumberFormatException e)
+        {
+            session.setAttribute("movementError", "Cannot find category or new parent category!");
             response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
             return;
         }
-        int parentId = Integer.parseInt(request.getParameter("newParent"));
-        int toMoveId = Integer.parseInt(request.getParameter("toMove"));
         Category newParent;
         Category category;
         try
         {
             CategoryDAO categoryDAO = new CategoryDAO(connection);
             categories = categoryDAO.findAllCategories();
-            category = categoryDAO.findCategory(toMoveId, categories.get(0).getSubCategories());
+            category = categoryDAO.findCategoryDatabaseId(toMoveId, categories.get(0).getSubCategories());
             if (parentId == 0)
             {
                 //move to root
-                newParent = new Category(0, "root", 0);
+                newParent = categories.get(0);
             }
             else
             {
-                newParent = categoryDAO.findCategory(parentId, categories.get(0).getSubCategories());
+                newParent = categoryDAO.findCategoryDatabaseId(parentId, categories.get(0).getSubCategories());
             }
             if (category == null || newParent == null)
             {
                 session.setAttribute("movementError", "Cannot find category or new parent category!");
+                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+                return;
+            }
+            if(categoryDAO.isParent(newParent, category))
+            {
+                session.setAttribute("movementError", "Cannot move category to himself or to children!");
                 response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
                 return;
             }
