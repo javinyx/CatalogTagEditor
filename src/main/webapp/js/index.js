@@ -1,19 +1,6 @@
 $(document).ready(function () {
-    $.ajax({
-        type: "GET",
-        url: 'GetCategories',
-        success: function (response) {
-            let categoriesArray = JSON.parse(response);
-            console.log(response);
-            fillCategoriesDropdown(categoriesArray);
-            printCategories(categoriesArray, document.getElementById("category-list-div"));
-        },
-        statusCode: {
-            404: function () {
-                alert("Couldn't reach the endpoint")
-            }
-        }
-    });
+
+    updateViewCategories();
 
     document.getElementById("submit-category").addEventListener("click", function () {
         alert(document.getElementById("create-category-form"));
@@ -24,37 +11,8 @@ $(document).ready(function () {
             url: 'CreateCategory',
             data: {"categoryName": categoryName, "categoryParent": categoryParent},
             success: function (response) {
-                alert("Create success!");
-                $.ajax({
-                    type: "GET",
-                    url: 'GetCategories',
-                    success: function (response) {
-                        console.log("Printing categories");
-                        let categoriesArray = JSON.parse(response);
-                        printCategories(categoriesArray, document.getElementById("category-list-div"));
-                        alert("Get success!");
-                    },
-                    error: function (){
-                        alert("Something went wrong getting categories");
-                    },
-                    statusCode: {
-                        404: function () {
-                            alert("Couldn't reach the endpoint");
-                        }
-                    }
-                });
-            },
-            error: function (){
-                alert("Create error");
-            },
-            /*statusCode: {
-                400: function () {
-                    alert("Bad parameters, didn't create category");
-                },
-                404: function () {
-                    alert("Couldn't reach the endpoint");
-                }
-            }*/
+                updateViewCategories();
+            }
         });
     })
 
@@ -63,63 +21,55 @@ $(document).ready(function () {
     document.getElementById("welcome-message").textContent = `Welcome, ${sessionStorage.username}`;
 
     let dragged;
-    const errorMsg = document.getElementById("error-message");
-    document.addEventListener("drag", function (event) {
-        // events on drag
-    }, false);
+
     document.addEventListener("dragstart", function (event) {
+        // store a ref. on the dragged elem
         dragged = event.target;
-        errorMsg.textContent = `You're moving ${dragged.className} ${dragged.dataset.name}`;
-        event.target.style.opacity = .5;
+        // make it a lil bit transparent
+        event.target.style.opacity = ".7";
     }, false);
 
     document.addEventListener("dragend", function (event) {
         // reset the transparency
-        errorMsg.textContent = "";
         event.target.style.opacity = "";
+
     }, false);
 
     /* events fired on the drop targets */
     document.addEventListener("dragover", function (event) {
-        // prevent default (to allow drop)
+        // prevent default to allow drop
         event.preventDefault();
     }, false);
 
     document.addEventListener("dragenter", function (event) {
         // highlight potential drop target when the draggable element enters it
-        if (event.target.className === "category" && dragged.className === "subCategory" || event.target.className === "subCategory") {
-            event.target.style.background = "aqua";
+        if (event.target.className == "dropzone") {
+            event.target.style.background = "purple";
         }
+
     }, false);
 
     document.addEventListener("dragleave", function (event) {
         // reset background of potential drop target when the draggable element leaves it
-        if (event.target.className === "folder" && dragged.className === "subfolder" || event.target.id === "wastebin" || event.target.className === "subfolder") {
+        if (event.target.className == "dropzone") {
             event.target.style.background = "";
         }
+
     }, false);
 
     document.addEventListener("drop", function (event) {
         // prevent default action (open as link for some elements)
         event.preventDefault();
         // move dragged elem to the selected drop target
-        if (event.target.className === "folder" && dragged.className === "subfolder") {
-            let dataForm = {
-                entity_id: parseInt(dragged.dataset.itemid),
-                to: parseInt(event.target.dataset.itemid)
-            }
+        if (event.target.className == "dropzone") {
             event.target.style.background = "";
+
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: 'MoveCategory',
-                data: JSON.stringify(dataForm),
+                data: {"toMove": dragged.value, "newParent": event.target.value},
                 success: function (response) {
-                    dragged.parentNode.removeChild(dragged);
-                    event.target.getElementsByTagName("ul")[0].appendChild(dragged);
-                    errorMsg.textContent = response.responseText;
-                },
-                error: function (response) {
-                    errorMsg.textContent = response.responseText;
+                    updateViewCategories();
                 }
             });
         }
@@ -138,6 +88,13 @@ function printCategories(categoriesArray, parentElement) {
 
     for (let i = 0; i < categoriesArray.length; i++) {
         let categoryListElement = document.createElement("li");
+        if (categoriesArray[i].id === 0) {
+            categoryListElement.setAttribute("draggable", "false");
+        } else {
+            categoryListElement.setAttribute("draggable", "true");
+        }
+        categoryListElement.setAttribute("class", "dropzone");
+        categoryListElement.value = categoriesArray[i].id;
         categoriesList.appendChild(categoryListElement);
         categoryListElement.appendChild(document.createTextNode(categoriesArray[i].id + " " + categoriesArray[i].name));
         printCategories(categoriesArray[i].subCategories, categoriesList);
@@ -151,9 +108,29 @@ function fillCategoriesDropdown(categoriesArray) {
     }
     for (let i = 0; i < categoriesArray.length; i++) {
         let categoryDropdownOption = document.createElement("option");
-        categoryDropdownOption.appendChild(document.createTextNode(categoriesArray[i].name));
+        categoryDropdownOption.appendChild(document.createTextNode(categoriesArray[i].id + " " + categoriesArray[i].name));
         categoryDropdownOption.value = categoriesArray[i].databaseId;
         categoryDropdownSelect.appendChild(categoryDropdownOption);
         fillCategoriesDropdown(categoriesArray[i].subCategories);
     }
+}
+
+function updateViewCategories() {
+    document.getElementById("category-list-div").innerHTML = "";
+    document.getElementById("categoryParent").innerHTML = "";
+    $.ajax({
+        type: "GET",
+        url: 'GetCategories',
+        success: function (response) {
+            let categoriesArray = JSON.parse(response);
+            console.log(response);
+            fillCategoriesDropdown(categoriesArray);
+            printCategories(categoriesArray, document.getElementById("category-list-div"));
+        },
+        statusCode: {
+            404: function () {
+                alert("Couldn't reach the endpoint")
+            }
+        }
+    });
 }

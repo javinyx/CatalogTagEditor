@@ -45,3 +45,11 @@ table {
 td {
     padding: 10px 0;
 }
+
+.dropzone {
+    width: 200px;
+    height: 20px;
+    background: blueviolet;
+    margin-bottom: 10px;
+    padding: 10px;
+}

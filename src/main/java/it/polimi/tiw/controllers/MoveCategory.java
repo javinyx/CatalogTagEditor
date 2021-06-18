@@ -34,7 +34,7 @@ public class MoveCategory extends HttpServlet
         if (param1.startsWith(param2))
         {
             session.setAttribute("movementError", "Cannot Move Element inside himself or children!");
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            response.setStatus(400);
             return;
         }
         int parentId = Integer.parseInt(request.getParameter("newParent"));
@@ -58,7 +58,7 @@ public class MoveCategory extends HttpServlet
             if (category == null || newParent == null)
             {
                 session.setAttribute("movementError", "Cannot find category or new parent category!");
-                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+                response.setStatus(400);
                 return;
             }
             categoryDAO.moveCategory(category.getDatabaseId(),  newParent.getDatabaseId());
