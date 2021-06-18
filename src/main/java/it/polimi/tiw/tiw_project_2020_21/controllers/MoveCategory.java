@@ -3,13 +3,13 @@ package it.polimi.tiw.tiw_project_2020_21.controllers;
 import it.polimi.tiw.tiw_project_2020_21.beans.Category;
 import it.polimi.tiw.tiw_project_2020_21.dao.CategoryDAO;
 import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
-import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,8 +28,16 @@ public class MoveCategory extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
+        HttpSession session = request.getSession();
         ArrayList<Category> categories;
+        String param1 = request.getParameter("newParent");
+        String param2 = request.getParameter("toMove");
+        if (param1.startsWith(param2))
+        {
+            session.setAttribute("movementError", "Cannot Move Element inside himself or children!");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            return;
+        }
         int parentId = Integer.parseInt(request.getParameter("newParent"));
         int toMoveId = Integer.parseInt(request.getParameter("toMove"));
         Category newParent;
@@ -50,12 +58,16 @@ public class MoveCategory extends HttpServlet
             }
             if (category == null || newParent == null)
             {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
+                session.setAttribute("movementError", "Cannot find category or new parent category!");
+                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+                return;
             }
             categoryDAO.moveCategory(category.getDatabaseId(),  newParent.getDatabaseId());
+            session.removeAttribute("movementError");
         }catch (SQLException e)
         {
             e.printStackTrace();
+            session.setAttribute("movementError", "Cannot apply changes to the server!");
         }
         response.sendRedirect(getServletContext().getContextPath() + "/");
     }
