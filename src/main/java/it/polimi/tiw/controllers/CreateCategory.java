@@ -22,45 +22,58 @@ public class CreateCategory extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("STARTED CreateCategory...");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         HttpSession session = request.getSession();
         String name = request.getParameter("categoryName");
         String categoryParent = request.getParameter("categoryParent");
+        int parentDatabaseId;
+        //check if value is a number
+        try
+        {
+            parentDatabaseId = Integer.parseInt(categoryParent);
+        }
+        catch (Exception e)
+        {
+            session.setAttribute("newCategoryError", "Parent value is not correct");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            return;
+        }
+
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
-        if (name.equals("")) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Name is empty!");
-            return;
-        } else if (name.length() > 50) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Name is too long!");
-            return;
-        } else if (categoryParent == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Specify a category parent!");
+        //check if name is not empty
+        if (name.equals("") || name.length() > 50 || categoryParent == null) {
+            session.setAttribute("newCategoryError", "New category name must not be empty");
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
             return;
         }
 
         try {
-            int parentDatabaseId = Integer.parseInt(categoryParent);
-
-            try {
-                if (categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Couldn't find the parent category!");
-                    return;
-                }
-                categoryDAO.createNewCategory(name, parentDatabaseId);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to create a new category!");
+            //check if parent exists in database
+            if(categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null)
+            {
+                session.setAttribute("newCategoryError", "Parent value is not correct");
+                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
                 return;
             }
-            /*session.removeAttribute("newCategoryError");
-            response.setStatus(200);*/
-
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Selected parent ID is not a valid number!");
+            //check if already exists a category with this name
+            if (categoryDAO.alreadyExist(name))
+            {
+                session.setAttribute("newCategoryError", "Already exists a category with this name");
+                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+                return;
+            }
+            categoryDAO.createNewCategory(name, parentDatabaseId);
         }
-        
+        catch (SQLException e) {
+            e.printStackTrace();
+            session.setAttribute("newCategoryError", "Could not create new category\n" + e.getErrorCode());
+            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            return;
+        }
+        session.removeAttribute("newCategoryError");
+        response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
     }
 
     @Override

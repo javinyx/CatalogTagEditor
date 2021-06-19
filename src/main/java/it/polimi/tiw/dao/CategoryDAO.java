@@ -45,6 +45,7 @@ public class CategoryDAO
         }
         return categories;
     }
+
     public void createNewCategory(String name, int parentDatabaseId) throws SQLException
     {
         String query;
@@ -58,30 +59,16 @@ public class CategoryDAO
     public void updateFather(int databaseId, int parentDatabaseId) throws SQLException
     {
         String query;
-            query = "UPDATE categories SET parent_id = ?, last_modified = NOW()  WHERE id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, parentDatabaseId);
-            preparedStatement.setInt(2, databaseId);
-            preparedStatement.executeUpdate();
+        query = "UPDATE categories SET parent_id = ?, last_modified = NOW()  WHERE id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, parentDatabaseId);
+        preparedStatement.setInt(2, databaseId);
+        preparedStatement.executeUpdate();
     }
 
     public void moveCategory(int databaseId, int parentDatabaseId) throws SQLException
     {
         updateFather(databaseId, parentDatabaseId);
-    }
-
-    public Category findCategory(int id, ArrayList<Category> categories)
-    {
-        String idString = Integer.toString(id);
-        while (idString.length() > 0)
-        {
-            int index = Integer.parseInt(String.valueOf(idString.charAt(0)));
-            if(categories.get(index-1).getId() == id)
-                return categories.get(index-1);
-            categories = categories.get(index-1).getSubCategories();
-            idString = idString.substring(1);
-        }
-        return null;
     }
 
     public Category findCategoryDatabaseId(int id, ArrayList<Category> categories)
@@ -96,5 +83,22 @@ public class CategoryDAO
                 return temp;
         }
         return null;
+    }
+    public boolean isParent(Category possibleChild, Category possibleParent)
+    {
+        return (Integer.toString(possibleChild.getId()).startsWith(Integer.toString(possibleParent.getId())));
+    }
+
+    public boolean alreadyExist(String name) throws SQLException
+    {
+        String query = "SELECT * FROM categories WHERE name = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setString(1, name);
+            try (ResultSet resultSet = preparedStatement.executeQuery())
+            {
+                return resultSet.next();
+            }
+        }
     }
 }
