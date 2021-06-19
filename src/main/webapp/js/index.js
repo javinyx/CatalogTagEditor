@@ -67,10 +67,11 @@ $(document).ready(function () {
         // move dragged elem to the selected drop target
         if (event.target.className == "dropzone") {
             event.target.style.background = "";
-            if (!isParent(dragged.value, event.target.value))
-            {
-                saveLocalChanges(dragged.value, event.target.value);
-                updateViewFromClient(dragged.value, event.target.value);
+            if (!isParent(dragged.value, event.target.value)) {
+                if (confirm("Are you sure?")) {
+                    saveLocalChanges(dragged.value, event.target.value);
+                    updateViewFromClient(dragged.value, event.target.value);
+                }
             }
         }
     }, false);
@@ -81,8 +82,7 @@ function handleLogout() {
     window.location.href = '/Logout';
 }
 
-function isParent(parentMoved, child)
-{
+function isParent(parentMoved, child) {
     return child.toString().startsWith(parentMoved.toString());
 }
 
@@ -106,10 +106,8 @@ function printCategories(categoriesArray, parentElement, count) {
     }
 }
 
-function updateCategoriesIds(categoriesArray, count)
-{
-    for (let i = 0; i < categoriesArray.length; i++)
-    {
+function updateCategoriesIds(categoriesArray, count) {
+    for (let i = 0; i < categoriesArray.length; i++) {
         if (categoriesArray[i].id !== 0)
             categoriesArray[i].id = count * 10 + i + 1;
         updateCategoriesIds(categoriesArray[i].subCategories, categoriesArray[i].id);
@@ -164,21 +162,16 @@ function updateViewFromClient(categoryId, parentId) {
     sessionStorage.setItem('categories', JSON.stringify(categoriesArray));
 }
 
-function removeCategory(categoriesArray, categoryId)
-{
+function removeCategory(categoriesArray, categoryId) {
     let category = null;
-    for (let i = 0; i < categoriesArray.length; i++)
-    {
-        if (categoriesArray[i].id === categoryId)
-        {
+    for (let i = 0; i < categoriesArray.length; i++) {
+        if (categoriesArray[i].id === categoryId) {
             category = categoriesArray[i];
             categoriesArray.splice(i, 1);
             return category;
-        } else
-        {
+        } else {
             category = removeCategory(categoriesArray[i].subCategories, categoryId);
-            if (category !== null)
-            {
+            if (category !== null) {
                 return category;
             }
         }
@@ -186,20 +179,15 @@ function removeCategory(categoriesArray, categoryId)
     return null;
 }
 
-function findCategory(categoriesArray, categoryId)
-{
+function findCategory(categoriesArray, categoryId) {
     let category = null;
-    for (let i = 0; i < categoriesArray.length; i++)
-    {
-        if (categoriesArray[i].id === categoryId)
-        {
+    for (let i = 0; i < categoriesArray.length; i++) {
+        if (categoriesArray[i].id === categoryId) {
             category = categoriesArray[i];
             return category;
-        } else
-        {
+        } else {
             category = findCategory(categoriesArray[i].subCategories, categoryId);
-            if (category !== null)
-            {
+            if (category !== null) {
                 return category;
             }
         }
@@ -235,17 +223,23 @@ function sendUpdatesToServer() {
 
     alert(sessionStorage.getItem('storedChanges'));
     sessionStorage.setItem('storedChanges', '{"changes": []}');
+    document.getElementById("send-updates").style.display = "none";
 }
 
 function saveLocalChanges(id, parentId) {
-    let localChanges = JSON.parse(sessionStorage.getItem('storedChanges')); // si romperà ??????
+    let localChanges = JSON.parse(sessionStorage.getItem('storedChanges'));
     let categories = JSON.parse(sessionStorage.getItem('categories'));
 
     let newChild = findCategory(categories, id);
     let newParent = findCategory(categories, parentId);
 
-    localChanges['changes'].push({"categoryId": id, "databaseId": newChild.databaseId, "parentId": parentId, "parentDatabaseId": newParent.databaseId});
+    localChanges['changes'].push({
+        "categoryId": id,
+        "databaseId": newChild.databaseId,
+        "parentId": parentId,
+        "parentDatabaseId": newParent.databaseId
+    });
     sessionStorage.setItem('storedChanges', JSON.stringify(localChanges));
-    //alert("Saved local changes");
+    document.getElementById("send-updates").style.display = "inline-block";
 }
 

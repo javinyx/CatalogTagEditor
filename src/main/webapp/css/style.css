@@ -67,3 +67,7 @@ td {
     display: inline-block;
     font-size: 14px;
 }
+
+#send-updates {
+    display: none;
+}

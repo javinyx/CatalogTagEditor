@@ -101,4 +101,18 @@ public class CategoryDAO
             }
         }
     }
+
+    public Category findCategory(int id, ArrayList<Category> categories)
+    {
+        String idString = Integer.toString(id);
+        while (idString.length() > 0)
+        {
+            int index = Integer.parseInt(String.valueOf(idString.charAt(0)));
+            if(categories.get(index-1).getId() == id)
+                return categories.get(index-1);
+            categories = categories.get(index-1).getSubCategories();
+            idString = idString.substring(1);
+        }
+        return null;
+    }
 }
