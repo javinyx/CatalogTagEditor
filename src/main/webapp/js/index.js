@@ -68,8 +68,8 @@ $(document).ready(function () {
         if (event.target.className == "dropzone") {
             event.target.style.background = "";
 
-            updateViewFromClient(dragged.value, event.target.value);
             saveLocalChanges(dragged.value, 0, event.target.value, 0);
+            updateViewFromClient(dragged.value, event.target.value);
 
         }
     }, false);
@@ -137,8 +137,46 @@ function updateViewFromServer() {
 
 function updateViewFromClient(categoryId, parentId) {
     let categoriesArray = JSON.parse(sessionStorage.getItem('categories'));
-    // TODO logica per spostare le categorie in locale
-    printCategories(categoriesArray);
+    alert(categoriesArray);
+    let category = findAndRemoveCategory(categoriesArray, categoryId);
+    addChildByParentId(categoriesArray, category, parentId);
+    sessionStorage.setItem('categories', JSON.stringify(categoriesArray));
+    document.getElementById("category-list-div").innerHTML = "";
+    printCategories(categoriesArray, document.getElementById('category-list-div'));
+}
+
+function findAndRemoveCategory(categoriesArray, categoryId) {
+    let category = "";
+    for (let i = 0; i < categoriesArray.length; i++) {
+        for (let j = 0; j < categoriesArray[i].subCategories.length; j++) {
+            if (categoriesArray[i].subCategories[j].id === categoryId) {
+                category = categoriesArray[i].subCategories[j];
+                categoriesArray[i].subCategories.splice(j, 1);
+                return category;
+            } else {
+                category = findAndRemoveCategory(categoriesArray[i].subCategories, categoryId);
+                if (category !== "") {
+                    return category;
+                }
+            }
+        }
+    }
+    return category;
+}
+
+function addChildByParentId(categoriesArray, child, parentId) {
+    for (let i = 0; i < categoriesArray.length; i++) {
+        if (categoriesArray[i].id === parentId) {
+            child.id = categoriesArray[i].id * 10 + categoriesArray[i].subCategories.length + 1;
+            categoriesArray[i].subCategories.push(child);
+            return true;
+        } else {
+            if (addChildByParentId(categoriesArray[i].subCategories, parentId)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 function sendUpdatesToServer() {
