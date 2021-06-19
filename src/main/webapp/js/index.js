@@ -67,10 +67,11 @@ $(document).ready(function () {
         // move dragged elem to the selected drop target
         if (event.target.className == "dropzone") {
             event.target.style.background = "";
-
-            saveLocalChanges(dragged.value, 0, event.target.value, 0);
-            updateViewFromClient(dragged.value, event.target.value);
-
+            if (!isParent(dragged.value, event.target.value))
+            {
+                saveLocalChanges(dragged.value, event.target.value);
+                updateViewFromClient(dragged.value, event.target.value);
+            }
         }
     }, false);
 });
@@ -78,6 +79,11 @@ $(document).ready(function () {
 function handleLogout() {
     sessionStorage.clear();
     window.location.href = '/Logout';
+}
+
+function isParent(parentMoved, child)
+{
+    return child.toString().startsWith(parentMoved.toString());
 }
 
 function printCategories(categoriesArray, parentElement, count) {
@@ -91,13 +97,22 @@ function printCategories(categoriesArray, parentElement, count) {
             categoryListElement.setAttribute("draggable", "false");
         } else {
             categoryListElement.setAttribute("draggable", "true");
-            categoriesArray[i].id = count * 10 + i + 1;
         }
         categoryListElement.setAttribute("class", "dropzone");
         categoryListElement.value = categoriesArray[i].id;
         categoriesList.appendChild(categoryListElement);
         categoryListElement.appendChild(document.createTextNode(categoriesArray[i].id + " " + categoriesArray[i].name));
         printCategories(categoriesArray[i].subCategories, categoriesList, categoriesArray[i].id);
+    }
+}
+
+function updateCategoriesIds(categoriesArray, count)
+{
+    for (let i = 0; i < categoriesArray.length; i++)
+    {
+        if (categoriesArray[i].id !== 0)
+            categoriesArray[i].id = count * 10 + i + 1;
+        updateCategoriesIds(categoriesArray[i].subCategories, categoriesArray[i].id);
     }
 }
 
@@ -123,7 +138,6 @@ function updateViewFromServer() {
         url: 'GetCategories',
         success: function (response) {
             let categoriesArray = JSON.parse(response);
-            console.log(response);
             fillCategoriesDropdown(categoriesArray);
             printCategories(categoriesArray, document.getElementById("category-list-div"), 0);
             sessionStorage.setItem('categories', response);
@@ -138,32 +152,59 @@ function updateViewFromServer() {
 
 function updateViewFromClient(categoryId, parentId) {
     let categoriesArray = JSON.parse(sessionStorage.getItem('categories'));
-    let category = findAndRemoveCategory(categoriesArray, categoryId);
+    let category = removeCategory(categoriesArray, categoryId);
     addChildByParentId(categoriesArray, category, parentId);
+
 
     sessionStorage.setItem('categories', JSON.stringify(categoriesArray));
     document.getElementById("category-list-div").innerHTML = "";
 
+    updateCategoriesIds(categoriesArray, 0);
     printCategories(categoriesArray, document.getElementById('category-list-div'), 0);
+    sessionStorage.setItem('categories', JSON.stringify(categoriesArray));
 }
 
-function findAndRemoveCategory(categoriesArray, categoryId) {
-    let category = "";
-    for (let i = 0; i < categoriesArray.length; i++) {
-        for (let j = 0; j < categoriesArray[i].subCategories.length; j++) {
-            if (categoriesArray[i].subCategories[j].id === categoryId) {
-                category = categoriesArray[i].subCategories[j];
-                categoriesArray[i].subCategories.splice(j, 1);
+function removeCategory(categoriesArray, categoryId)
+{
+    let category = null;
+    for (let i = 0; i < categoriesArray.length; i++)
+    {
+        if (categoriesArray[i].id === categoryId)
+        {
+            category = categoriesArray[i];
+            categoriesArray.splice(i, 1);
+            return category;
+        } else
+        {
+            category = removeCategory(categoriesArray[i].subCategories, categoryId);
+            if (category !== null)
+            {
                 return category;
-            } else {
-                category = findAndRemoveCategory(categoriesArray[i].subCategories, categoryId);
-                if (category !== "") {
-                    return category;
-                }
             }
         }
     }
-    return category;
+    return null;
+}
+
+function findCategory(categoriesArray, categoryId)
+{
+    let category = null;
+    for (let i = 0; i < categoriesArray.length; i++)
+    {
+        if (categoriesArray[i].id === categoryId)
+        {
+            category = categoriesArray[i];
+            return category;
+        } else
+        {
+            category = findCategory(categoriesArray[i].subCategories, categoryId);
+            if (category !== null)
+            {
+                return category;
+            }
+        }
+    }
+    return null;
 }
 
 function addChildByParentId(categoriesArray, child, parentId) {
@@ -196,10 +237,15 @@ function sendUpdatesToServer() {
     sessionStorage.setItem('storedChanges', '{"changes": []}');
 }
 
-function saveLocalChanges(id, databaseId, parentId, parentDatabaseId) {
+function saveLocalChanges(id, parentId) {
     let localChanges = JSON.parse(sessionStorage.getItem('storedChanges')); // si romperà ??????
-    localChanges['changes'].push({"categoryId": id,"databaseId": databaseId, "parentId": parentId, "parentDatabaseId": parentDatabaseId});
+    let categories = JSON.parse(sessionStorage.getItem('categories'));
+
+    let newChild = findCategory(categories, id);
+    let newParent = findCategory(categories, parentId);
+
+    localChanges['changes'].push({"categoryId": id, "databaseId": newChild.databaseId, "parentId": parentId, "parentDatabaseId": newParent.databaseId});
     sessionStorage.setItem('storedChanges', JSON.stringify(localChanges));
-    alert("Saved local changes");
+    //alert("Saved local changes");
 }
 
