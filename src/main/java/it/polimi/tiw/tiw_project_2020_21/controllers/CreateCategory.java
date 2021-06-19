@@ -29,6 +29,7 @@ public class CreateCategory extends HttpServlet
         String name = request.getParameter("categoryName");
         String categoryParent = request.getParameter("categoryParent");
         int parentDatabaseId;
+        //check if value is a number
         try
         {
             parentDatabaseId = Integer.parseInt(categoryParent);
@@ -39,8 +40,10 @@ public class CreateCategory extends HttpServlet
             response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
             return;
         }
+
         CategoryDAO categoryDAO = new CategoryDAO(connection);
         System.out.println();
+        //check if name is not empty
         if (name.equals("") || name.length() > 50 || categoryParent == null) {
             session.setAttribute("newCategoryError", "New category name must not be empty");
             response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
@@ -48,9 +51,17 @@ public class CreateCategory extends HttpServlet
         }
 
         try {
+            //check if parent exists in database
             if(categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null)
             {
                 session.setAttribute("newCategoryError", "Parent value is not correct");
+                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+                return;
+            }
+            //check if already exists a category with this name
+            if (categoryDAO.alreadyExist(name))
+            {
+                session.setAttribute("newCategoryError", "Already exists a category with this name");
                 response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
                 return;
             }

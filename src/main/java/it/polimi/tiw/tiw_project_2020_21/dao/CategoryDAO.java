@@ -87,4 +87,17 @@ public class CategoryDAO
     {
         return (Integer.toString(possibleChild.getId()).startsWith(Integer.toString(possibleParent.getId())));
     }
+
+    public boolean alreadyExist(String name) throws SQLException
+    {
+        String query = "SELECT * FROM categories WHERE name = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setString(1, name);
+            try (ResultSet resultSet = preparedStatement.executeQuery())
+            {
+                return resultSet.next();
+            }
+        }
+    }
 }
