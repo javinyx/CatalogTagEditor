@@ -80,7 +80,7 @@ function handleLogout() {
     window.location.href = '/Logout';
 }
 
-function printCategories(categoriesArray, parentElement) {
+function printCategories(categoriesArray, parentElement, count) {
     let categoriesList = document.createElement("ul");
     parentElement.appendChild(categoriesList);
     categoriesList.className = "category";
@@ -91,12 +91,13 @@ function printCategories(categoriesArray, parentElement) {
             categoryListElement.setAttribute("draggable", "false");
         } else {
             categoryListElement.setAttribute("draggable", "true");
+            categoriesArray[i].id = count * 10 + i + 1;
         }
         categoryListElement.setAttribute("class", "dropzone");
         categoryListElement.value = categoriesArray[i].id;
         categoriesList.appendChild(categoryListElement);
         categoryListElement.appendChild(document.createTextNode(categoriesArray[i].id + " " + categoriesArray[i].name));
-        printCategories(categoriesArray[i].subCategories, categoriesList);
+        printCategories(categoriesArray[i].subCategories, categoriesList, categoriesArray[i].id);
     }
 }
 
@@ -124,7 +125,7 @@ function updateViewFromServer() {
             let categoriesArray = JSON.parse(response);
             console.log(response);
             fillCategoriesDropdown(categoriesArray);
-            printCategories(categoriesArray, document.getElementById("category-list-div"));
+            printCategories(categoriesArray, document.getElementById("category-list-div"), 0);
             sessionStorage.setItem('categories', response);
         },
         statusCode: {
@@ -137,12 +138,13 @@ function updateViewFromServer() {
 
 function updateViewFromClient(categoryId, parentId) {
     let categoriesArray = JSON.parse(sessionStorage.getItem('categories'));
-    alert(categoriesArray);
     let category = findAndRemoveCategory(categoriesArray, categoryId);
     addChildByParentId(categoriesArray, category, parentId);
+
     sessionStorage.setItem('categories', JSON.stringify(categoriesArray));
     document.getElementById("category-list-div").innerHTML = "";
-    printCategories(categoriesArray, document.getElementById('category-list-div'));
+
+    printCategories(categoriesArray, document.getElementById('category-list-div'), 0);
 }
 
 function findAndRemoveCategory(categoriesArray, categoryId) {
@@ -171,7 +173,7 @@ function addChildByParentId(categoriesArray, child, parentId) {
             categoriesArray[i].subCategories.push(child);
             return true;
         } else {
-            if (addChildByParentId(categoriesArray[i].subCategories, parentId)) {
+            if (addChildByParentId(categoriesArray[i].subCategories, child, parentId)) {
                 return true;
             }
         }
@@ -191,6 +193,7 @@ function sendUpdatesToServer() {
     });*/
 
     alert(sessionStorage.getItem('storedChanges'));
+    sessionStorage.setItem('storedChanges', '{"changes": []}');
 }
 
 function saveLocalChanges(id, databaseId, parentId, parentDatabaseId) {
