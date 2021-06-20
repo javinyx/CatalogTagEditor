@@ -4,19 +4,32 @@ $(document).ready(function () {
     sessionStorage.setItem('storedChanges', '{"changes": []}');
 
     document.getElementById("submit-category").addEventListener("click", function () {
-        let categoryName = document.forms["create-category-form"]["categoryName"].value;
-        let categoryParent = document.forms["create-category-form"]["categoryParent"].value;
+        if (confirm("Any unsaved changes to the tree will be lost")) {
+            let categoryName = document.forms["create-category-form"]["categoryName"].value;
+            let categoryParent = document.forms["create-category-form"]["categoryParent"].value;
+            sessionStorage.setItem('storedChanges', '{"changes": []}');
+            $.ajax({
+                type: "POST",
+                url: 'CreateCategory',
+                data: {"categoryName": categoryName, "categoryParent": categoryParent},
+                success: function (response) {
+                    updateViewFromServer();
+                }
+            });
+        }
+    })
+
+    document.getElementById("logout-button").addEventListener("click", function () {
         $.ajax({
             type: "POST",
-            url: 'CreateCategory',
-            data: {"categoryName": categoryName, "categoryParent": categoryParent},
+            url: 'Logout',
             success: function (response) {
-                updateViewFromServer();
+                window.location.href = 'login.html';
             }
         });
     })
 
-    document.getElementById("send-updates").addEventListener("click", function () {
+    document.getElementById("send-tree-changes").addEventListener("click", function () {
         sendUpdatesToServer();
     })
 
@@ -75,11 +88,6 @@ $(document).ready(function () {
         }
     }, false);
 });
-
-function handleLogout() {
-    sessionStorage.clear();
-    window.location.href = '/Logout';
-}
 
 function isParent(parentMoved, child) {
     return child.toString().startsWith(parentMoved.toString());
@@ -223,7 +231,7 @@ function sendUpdatesToServer() {
 
     alert(sessionStorage.getItem('storedChanges'));
     sessionStorage.setItem('storedChanges', '{"changes": []}');
-    document.getElementById("send-updates").style.display = "none";
+    document.getElementById("send-tree-changes").style.display = "none";
 }
 
 function saveLocalChanges(id, parentId) {
@@ -240,6 +248,6 @@ function saveLocalChanges(id, parentId) {
         "parentDatabaseId": newParent.databaseId
     });
     sessionStorage.setItem('storedChanges', JSON.stringify(localChanges));
-    document.getElementById("send-updates").style.display = "inline-block";
+    document.getElementById("send-tree-changes").style.display = "inline-block";
 }
 

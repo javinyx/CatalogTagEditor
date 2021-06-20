@@ -16,10 +16,16 @@ public class Logout extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session != null) {
+            System.out.println(session.getAttribute("user"));
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+            response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+            response.setDateHeader("Expires", 0); // Proxies.
             session.invalidate();
         }
-        String path = getServletContext().getContextPath() +  "/login.html";
-        response.sendRedirect(path);
+
+        //System.out.println(session.getAttribute("user"));
+        response.setStatus(200);
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

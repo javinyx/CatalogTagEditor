@@ -90,7 +90,7 @@ td {
     cursor: pointer;
 }
 
-#send-updates {
+#send-tree-changes {
     display: none;
 }
 
