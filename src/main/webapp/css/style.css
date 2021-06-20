@@ -1,97 +1,38 @@
+/* Global Styles ******************************************************************************************************/
+html {
+    font-size: 62.5%; /* this is so we can use the 1rem = 10px conversion */
+}
+
 body {
-    max-width: 650px;
-    margin: 40px auto;
-    padding: 0 10px;
-    font: 18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    color: #444
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    margin: 0;
+    background: #444444;
 }
 
-h1,
-h2,
-h3 {
-    line-height: 1.2
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        color: white;
-        background: #444
-    }
-    a:link {
-        color: #5bf
-    }
-    a:visited {
-        color: #ccf
-    }
-}
-
-form [type=submit] {
-    background-color: #226b28; /* Green */
-    border: none;
-    border-radius: 8px;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
+a:link, a:visited, a:link:active, a:visited:active {
     text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    filter: drop-shadow(0 0.1rem 0.1rem #051f04);
+    color: #ffffff;
 }
 
-form [type=submit]:hover {
-    background-color: #1c581f; /* Darker green */
-    cursor: pointer;
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
 }
 
-table {
-    text-align: left;
-    border-spacing: 20px;
-}
-
-td {
-    padding: 10px 0;
-}
-
-.dropzone {
-    width: 200px;
-    height: 20px;
-    background: blueviolet;
-    border-radius: 8px;
-    text-align: left;
-    margin-bottom: 10px;
-    padding: 10px;
-    filter: drop-shadow(0 0.1rem 0.1rem #051f04);
-}
-
-.dropzone:hover {
-    background: #7224b5; /* Darker blueviolet */
-    cursor: grab;
-}
-
-.dropzone:active {
-    cursor:grabbing;
-}
-
-.button {
-    background-color: #226b28; /* Green */
+button, form [type=submit] {
+    margin: 0 auto;
+    background-color: #0aa49e;
+    border-radius: 0.8rem;
     border: none;
-    border-radius: 8px;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    filter: drop-shadow(0 0.1rem 0.1rem #062f05);
+    padding: 1rem 2rem;
+    font-size: 2.0rem;
+    color: #ffffff;
+    transition: background-color 0.3s;
 }
 
-.button:hover {
-    background-color: #1c581f; /* Darker green */
+button:hover, form [type=submit]:hover {
+    background-color: #066763;
     cursor: pointer;
-}
-
-#send-tree-changes {
-    display: none;
 }
 
 #errormessage {
@@ -103,10 +44,159 @@ td {
     display: none;
 }
 
+select, form [type=text], form [type=password] {
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    font-size: 1.8rem;
+    height: auto;
+    margin: 0;
+    outline: 0;
+    padding: 0.5rem;
+    background-color: transparent;
+    color: #cfcfcf;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
+}
+
+select option {
+    background: #414141;
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Login Page *********************************************************************************************************/
+#login-content {
+    padding: 3rem;
+    background-color: #414141;
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    max-width: 480px;
+    margin: 10rem auto auto auto;
+    font-size: 2rem;
+    text-align: center;
+}
+
+#login-content label {
+    font-size: 1.8rem;
+}
+
+#login-content label {
+    margin-bottom: 1.5rem;
+}
+
+#login-content input[type=text], #login-content input[type=password] {
+    margin-bottom: 2.5rem;
+}
+
+#login-content label, #login-content form [type=submit] {
+    display: block;
+}
+
+#login-content label input {
+    margin: 0 0 0 1em;
+}
+
+/* Home Page *********************************************************************************************************/
+
+/* Header Section */
+header {
+    font-size: 2.4rem;
+    background: #262626;
+    margin-bottom: 8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+header a, header p {
+    padding: 3rem 5rem;
+}
+
+#logout-button {
+    background-color: #2f2f2f;
+    transition: background-color 0.3s;
+}
+
+#logout-button:hover {
+    background-color: #6c3480;
+}
+
+/* Content Section */
+#content {
+    max-width: 960px;
+    margin: auto auto 8rem auto;
+    font-size: 2rem;
+}
+
+/* Drag & Drop Section */
+#category-list-div {
+    margin-bottom: 8rem;
+}
+
 #root-category {
     cursor: not-allowed;
 }
 
 #root-category:hover {
-    background: blueviolet;
+    background: #7628be;
+}
+
+.dropzone {
+    width: 20ch;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #7628be;
+    border-radius: 0.8rem;
+    filter: drop-shadow(0 0.1rem 0.1rem #051f04);
+    transition: background-color 0.2s;
+}
+
+.dropzone:hover {
+    background: #5f1e94;
+    cursor: grab;
+}
+
+.dropzone:active {
+    cursor: grabbing;
+}
+
+/* Create Category Section */
+#create-category-div {
+    background-color: #414141;
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+#create-category-div label {
+    font-size: 1.8rem;
+}
+
+#create-category-div h4 {
+    margin-bottom: 3rem;
+}
+
+#create-category-div label {
+    margin-bottom: 2rem;
+}
+
+#create-category-div label, #create-category-div form [type=submit] {
+    display: block;
+}
+
+#create-category-div label select, #create-category-div label input {
+    margin: 0 0 0 1em;
+}
+
+#send-tree-changes {
+    display: none;
+    margin-top: 1em;
+}
+
+/* Footer Section */
+footer {
+    font-size: 1.5rem;
+    background: #262626;
+    text-align: center;
+    padding: 3.5rem 2rem;
 }

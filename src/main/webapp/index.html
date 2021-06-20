@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/index.js"></script>
@@ -8,20 +10,29 @@
     <title>Cataloging of Images</title>
 </head>
 <body>
-<p id="welcome-message"></p>
-<div id="category-list-div"></div> <br>
-<h4>Create Category</h4>
-<form id="create-category-form" name="create-category-form">
-    <label>Category name
-        <input id="categoryName" type="text" name="categoryName" required>
-    </label>
-    <label>Parent Category
-        <select id="categoryParent" name="categoryParent">
-        </select>
-    </label>
-    <input id="submit-category" type="submit" value="Create">
-</form>
-<button id="send-tree-changes" class="button">Apply changes</button> <br>
-<button id="logout-button" class="button">Logout</button>
+<header>
+    <p id="welcome-message"></p>
+    <a id="logout-button" href="">Logout</a>
+</header>
+<div id="content">
+    <div id="category-list-div"></div>
+    <div id="create-category-div">
+        <h4>Create Category</h4>
+        <form id="create-category-form" name="create-category-form">
+            <label>Category name:
+                <input id="categoryName" type="text" name="categoryName" required>
+            </label>
+            <label>Parent Category:
+                <select id="categoryParent" name="categoryParent">
+                </select>
+            </label>
+            <input id="submit-category" type="submit" value="Create">
+        </form>
+        <button id="send-tree-changes" class="button">Apply changes</button>
+    </div>
+</div>
+<footer>
+    <p>Cataloging of Images - Made with ❤ by Andrea Alesani, Davide Veronesi & Javin Barone</p>
+</footer>
 </body>
 </html>
