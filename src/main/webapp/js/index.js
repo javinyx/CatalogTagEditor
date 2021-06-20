@@ -93,6 +93,7 @@ function printCategories(categoriesArray, parentElement, count) {
     for (let i = 0; i < categoriesArray.length; i++) {
         let categoryListElement = document.createElement("li");
         if (categoriesArray[i].id === 0) {
+            categoryListElement.setAttribute("id", "root-category");
             categoryListElement.setAttribute("draggable", "false");
         } else {
             categoryListElement.setAttribute("draggable", "true");

@@ -35,6 +35,12 @@ form [type=submit] {
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
+    filter: drop-shadow(0 0.1rem 0.1rem #051f04);
+}
+
+form [type=submit]:hover {
+    background-color: #1c581f; /* Darker green */
+    cursor: pointer;
 }
 
 table {
@@ -54,7 +60,16 @@ td {
     text-align: left;
     margin-bottom: 10px;
     padding: 10px;
-    filter: drop-shadow(0 0.1rem 0.1rem #19052e);
+    filter: drop-shadow(0 0.1rem 0.1rem #051f04);
+}
+
+.dropzone:hover {
+    background: #7224b5; /* Darker blueviolet */
+    cursor: grab;
+}
+
+.dropzone:active {
+    cursor:grabbing;
 }
 
 .button {
@@ -67,6 +82,12 @@ td {
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
+    filter: drop-shadow(0 0.1rem 0.1rem #062f05);
+}
+
+.button:hover {
+    background-color: #1c581f; /* Darker green */
+    cursor: pointer;
 }
 
 #send-updates {
@@ -80,4 +101,12 @@ td {
     padding: 10px 20px;
     color: red;
     display: none;
+}
+
+#root-category {
+    cursor: not-allowed;
+}
+
+#root-category:hover {
+    background: blueviolet;
 }
