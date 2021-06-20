@@ -3,6 +3,7 @@ package it.polimi.tiw.controllers;
 import it.polimi.tiw.beans.Category;
 import it.polimi.tiw.dao.CategoryDAO;
 import it.polimi.tiw.util.Initializer;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,25 +16,17 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 
 @WebServlet(value = "/MoveCategory")
-public class MoveCategory extends HttpServlet
-{
+public class MoveCategory extends HttpServlet {
     private static Connection connection;
 
     @Override
-    public void init() {
-        connection = Initializer.connectionInit(getServletContext());
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         ArrayList<Category> categories;
         String param1 = request.getParameter("newParent");
         String param2 = request.getParameter("toMove");
 
-        if (param1.startsWith(param2))
-        {
+        if (param1.startsWith(param2)) {
             session.setAttribute("movementError", "Cannot Move Element inside himself or children!");
             return;
         }
@@ -41,43 +34,42 @@ public class MoveCategory extends HttpServlet
         int toMoveId = Integer.parseInt(request.getParameter("toMove"));
         Category newParent;
         Category category;
-        try
-        {
+
+        // Tries to get connection from db
+        try {
+            connection = Initializer.connectionInit(getServletContext());
+        } catch (Exception throwables) {
+            throwables.printStackTrace();
+        }
+
+        try {
             CategoryDAO categoryDAO = new CategoryDAO(connection);
             categories = categoryDAO.findAllCategories();
             category = categoryDAO.findCategory(toMoveId, categories.get(0).getSubCategories());
-            if (parentId == 0)
-            {
+            if (parentId == 0) {
                 //move to root
                 newParent = new Category(0, "root", 0);
-            }
-            else
-            {
+            } else {
                 newParent = categoryDAO.findCategory(parentId, categories.get(0).getSubCategories());
             }
-            if (category == null || newParent == null)
-            {
+            if (category == null || newParent == null) {
                 session.setAttribute("movementError", "Cannot find category or new parent category!");
                 return;
             }
-            categoryDAO.moveCategory(category.getDatabaseId(),  newParent.getDatabaseId());
+            categoryDAO.moveCategory(category.getDatabaseId(), newParent.getDatabaseId());
             session.removeAttribute("movementError");
-        }catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             session.setAttribute("movementError", "Cannot apply changes to the server!");
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/");
-    }
 
-    @Override
-    public void destroy() {
+        // Tries to close connection from db after executing the query
         try {
-            if(connection!=null) {
+            if (connection != null) {
                 connection.close();
             }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+        } catch (SQLException ignored) {}
+
+        response.sendRedirect(getServletContext().getContextPath() + "/");
     }
 }

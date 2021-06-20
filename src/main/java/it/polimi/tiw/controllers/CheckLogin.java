@@ -20,7 +20,7 @@ public class CheckLogin extends HttpServlet {
     private Connection connection = null;
 
     public void init() {
-        connection = Initializer.connectionInit(getServletContext());
+        //connection = Initializer.connectionInit(getServletContext());
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,6 +30,13 @@ public class CheckLogin extends HttpServlet {
         if (usrn == null || usrn.isEmpty() || pwd == null || pwd.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
             return;
+        }
+
+        // Tries to get connection from db
+        try {
+            connection = Initializer.connectionInit(getServletContext());
+        } catch (Exception throwables) {
+            throwables.printStackTrace();
         }
 
         UserDAO userDAO = new UserDAO(connection);
@@ -49,7 +56,7 @@ public class CheckLogin extends HttpServlet {
             if (connection != null) {
                 connection.close();
             }
-        } catch (SQLException sqle) {}
+        } catch (SQLException ignored) {}
 
         String path = getServletContext().getContextPath();
         if (user == null) {

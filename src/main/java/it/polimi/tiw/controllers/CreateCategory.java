@@ -18,7 +18,7 @@ public class CreateCategory extends HttpServlet {
 
     @Override
     public void init() {
-        connection = Initializer.connectionInit(getServletContext());
+        //connection = Initializer.connectionInit(getServletContext());
     }
 
     @Override
@@ -36,8 +36,15 @@ public class CreateCategory extends HttpServlet {
         catch (Exception e)
         {
             session.setAttribute("newCategoryError", "Parent value is not correct");
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            response.setStatus(400);
             return;
+        }
+
+        // Tries to get connection from db
+        try {
+            connection = Initializer.connectionInit(getServletContext());
+        } catch (Exception throwables) {
+            throwables.printStackTrace();
         }
 
         CategoryDAO categoryDAO = new CategoryDAO(connection);
@@ -45,7 +52,7 @@ public class CreateCategory extends HttpServlet {
         //check if name is not empty
         if (name.equals("") || name.length() > 50 || categoryParent == null) {
             session.setAttribute("newCategoryError", "New category name must not be empty");
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            response.setStatus(400);
             return;
         }
 
@@ -53,27 +60,30 @@ public class CreateCategory extends HttpServlet {
             //check if parent exists in database
             if(categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null)
             {
-                session.setAttribute("newCategoryError", "Parent value is not correct");
-                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+                response.setStatus(400);
                 return;
             }
             //check if already exists a category with this name
             if (categoryDAO.alreadyExist(name))
             {
-                session.setAttribute("newCategoryError", "Already exists a category with this name");
-                response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+                response.setStatus(400);
                 return;
             }
             categoryDAO.createNewCategory(name, parentDatabaseId);
         }
         catch (SQLException e) {
             e.printStackTrace();
-            session.setAttribute("newCategoryError", "Could not create new category\n" + e.getErrorCode());
-            response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+            response.setStatus(400);
             return;
         }
-        session.removeAttribute("newCategoryError");
-        response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
+        response.setStatus(200);
+
+        // Tries to close connection from db after executing the query
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException ignored) {}
     }
 
     @Override

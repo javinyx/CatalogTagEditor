@@ -4,7 +4,6 @@ $(document).ready(function () {
     sessionStorage.setItem('storedChanges', '{"changes": []}');
 
     document.getElementById("submit-category").addEventListener("click", function () {
-        alert(document.getElementById("create-category-form"));
         let categoryName = document.forms["create-category-form"]["categoryName"].value;
         let categoryParent = document.forms["create-category-form"]["categoryParent"].value;
         $.ajax({

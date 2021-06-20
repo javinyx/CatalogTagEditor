@@ -19,22 +19,37 @@ import java.util.ArrayList;
 public class GetCategories extends HttpServlet {
 
     private static Connection connection;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Override
     public void init() throws ServletException {
-        connection = Initializer.connectionInit(getServletContext());
+        //connection = Initializer.connectionInit(getServletContext());
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ArrayList<Category> categories = null;
+
+        // Tries to get connection from db
+        try {
+            connection = Initializer.connectionInit(getServletContext());
+        } catch (Exception throwables) {
+            throwables.printStackTrace();
+        }
+
         try {
             CategoryDAO categoryDAO = new CategoryDAO(connection);
             categories = categoryDAO.findAllCategories();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // Tries to close connection from db after executing the query
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException ignored) {}
 
 
         resp.setStatus(HttpServletResponse.SC_OK);
