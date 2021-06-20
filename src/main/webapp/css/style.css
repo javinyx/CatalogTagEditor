@@ -72,3 +72,12 @@ td {
 #send-updates {
     display: none;
 }
+
+#errormessage {
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #272727;
+    padding: 10px 20px;
+    color: red;
+    display: none;
+}

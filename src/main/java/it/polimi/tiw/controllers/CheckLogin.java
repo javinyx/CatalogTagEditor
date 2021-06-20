@@ -25,12 +25,22 @@ public class CheckLogin extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String usrn = request.getParameter("username");
-        String pwd = request.getParameter("pwd");
+        String pwd = request.getParameter("password");
+        Boolean fieldsAreValid = true;
 
-        if (usrn == null || usrn.isEmpty() || pwd == null || pwd.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
-            return;
+        System.out.println("Checking user " + usrn + " with password " + pwd);
+
+        if (usrn == null || usrn.isEmpty()) {
+            response.getWriter().println("Missing username");
+            fieldsAreValid = false;
         }
+        if (pwd == null || pwd.isEmpty()) {
+            response.getWriter().println("Missing password");
+            fieldsAreValid = false;
+        }
+
+        if (!fieldsAreValid)
+            return;
 
         // Tries to get connection from db
         try {
@@ -47,7 +57,7 @@ public class CheckLogin extends HttpServlet {
             user = userDAO.checkCredentials(usrn, pwd);
             System.out.println("Credentials checked");
         } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database credential checking");
+            response.getWriter().println("Failure in database credential checking");
             return;
         }
 
@@ -58,15 +68,14 @@ public class CheckLogin extends HttpServlet {
             }
         } catch (SQLException ignored) {}
 
-        String path = getServletContext().getContextPath();
         if (user == null) {
-            path = getServletContext().getContextPath() + "/login.html";
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().println("Incorrect username or password");
         } else {
             request.getSession().setAttribute("user", user);
-            String target = "/index.html";
-            path = path + target;
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().println("Logged in");
         }
-        response.sendRedirect(path);
     }
 
     public void destroy() {}
