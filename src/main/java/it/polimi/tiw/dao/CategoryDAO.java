@@ -1,6 +1,7 @@
 package it.polimi.tiw.dao;
 
 import it.polimi.tiw.beans.Category;
+import it.polimi.tiw.beans.Change;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,7 +57,7 @@ public class CategoryDAO
         preparedStatement.executeUpdate();
     }
 
-    public void updateFather(int databaseId, int parentDatabaseId) throws SQLException
+    public void updateFatherDatabase(int databaseId, int parentDatabaseId) throws SQLException
     {
         String query;
         query = "UPDATE categories SET parent_id = ?, last_modified = NOW()  WHERE id = ?";
@@ -66,9 +67,27 @@ public class CategoryDAO
         preparedStatement.executeUpdate();
     }
 
-    public void moveCategory(int databaseId, int parentDatabaseId) throws SQLException
+    public void moveCategory(Category category, Category oldParent, Category newParent)
     {
-        updateFather(databaseId, parentDatabaseId);
+        //updateFather(databaseId, parentDatabaseId)
+        for(int i = 0; i < oldParent.getSubCategories().size(); i++)
+        {
+            if (category.getDatabaseId() == oldParent.getSubCategories().get(i).getDatabaseId())
+            {
+                oldParent.getSubCategories().remove(i);
+                break;
+            }
+        }
+        category.setId(newParent.getId() * 10 + newParent.getSubCategories().size()+1);
+        newParent.getSubCategories().add(category);
+    }
+
+    public void publishChanges(ArrayList<Change> changes) throws SQLException
+    {
+        for(Change change: changes)
+        {
+            updateFatherDatabase(change.getDatabaseId(), change.getParentDatabaseId());
+        }
     }
 
     public Category findCategoryDatabaseId(int id, ArrayList<Category> categories)

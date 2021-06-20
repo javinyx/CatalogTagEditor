@@ -89,11 +89,13 @@ $(document).ready(function () {
     }, false);
 });
 
-function isParent(parentMoved, child) {
+function isParent(parentMoved, child)
+{
     return child.toString().startsWith(parentMoved.toString());
 }
 
-function printCategories(categoriesArray, parentElement, count) {
+function printCategories(categoriesArray, parentElement, count)
+{
     let categoriesList = document.createElement("ul");
     parentElement.appendChild(categoriesList);
     categoriesList.className = "category";
@@ -114,7 +116,8 @@ function printCategories(categoriesArray, parentElement, count) {
     }
 }
 
-function updateCategoriesIds(categoriesArray, count) {
+function updateCategoriesIds(categoriesArray, count)
+{
     for (let i = 0; i < categoriesArray.length; i++) {
         if (categoriesArray[i].id !== 0)
             categoriesArray[i].id = count * 10 + i + 1;
@@ -122,7 +125,8 @@ function updateCategoriesIds(categoriesArray, count) {
     }
 }
 
-function fillCategoriesDropdown(categoriesArray) {
+function fillCategoriesDropdown(categoriesArray)
+{
     let categoryDropdownSelect = document.getElementById("categoryParent");
     if (categoryDropdownSelect === null) {
         alert("categoryDropdownSelect is null");
@@ -136,7 +140,8 @@ function fillCategoriesDropdown(categoriesArray) {
     }
 }
 
-function updateViewFromServer() {
+function updateViewFromServer()
+{
     document.getElementById("category-list-div").innerHTML = "";
     document.getElementById("categoryParent").innerHTML = "";
     $.ajax({
@@ -220,14 +225,14 @@ function addChildByParentId(categoriesArray, child, parentId) {
 
 function sendUpdatesToServer() {
     // TODO
-    /*$.ajax({
+    $.ajax({
         type: "POST",
-        url: 'MoveMultipleCategories',
-        data: {"changes":  JSON.stringify(sessionStorage.getItem('changes'))},
+        url: 'MoveCategory',
+        data: {"changes":  JSON.stringify(JSON.parse(sessionStorage.getItem('storedChanges'))['changes'])},
         success: function (response) {
             updateViewFromServer();
         }
-    });*/
+    });
 
     alert(sessionStorage.getItem('storedChanges'));
     sessionStorage.setItem('storedChanges', '{"changes": []}');
