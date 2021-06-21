@@ -4,7 +4,7 @@ $(document).ready(function () {
     sessionStorage.setItem('storedChanges', '{"changes": []}');
 
     document.getElementById("submit-category").addEventListener("click", function () {
-        if (confirm("Any unsaved changes to the tree will be lost")) {
+        if (sessionStorage.getItem('storedChanges').localeCompare('{"changes": []}') === 0 || confirm("Any unsaved changes to the tree will be lost")) {
             let categoryName = document.forms["create-category-form"]["categoryName"].value;
             let categoryParent = document.forms["create-category-form"]["categoryParent"].value;
             sessionStorage.setItem('storedChanges', '{"changes": []}');
@@ -25,6 +25,7 @@ $(document).ready(function () {
             type: "POST",
             url: 'Logout',
             success: function (response) {
+                console.log('Logged out');
                 window.location.href = 'login.html';
             },
             failure: function (response)
@@ -234,7 +235,6 @@ function addChildByParentId(categoriesArray, child, parentId) {
 }
 
 function sendUpdatesToServer() {
-    // TODO
     $.ajax({
         type: "POST",
         url: 'MoveCategory',
@@ -243,6 +243,10 @@ function sendUpdatesToServer() {
             updateViewFromServer();
         }
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> d7d09cd (Bibo)
     sessionStorage.setItem('storedChanges', '{"changes": []}');
     document.getElementById("send-tree-changes").style.display = "none";
 }
