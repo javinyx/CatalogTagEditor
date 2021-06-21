@@ -58,11 +58,8 @@ select option {
 .errormessage {
     margin-top: 1rem;
     font-size: 1.4rem;
-    border-radius: 0.8rem;
-    background-color: #272727;
-    padding: 1rem 2rem;
     color: red;
-    display: none;
+    display: inline-block;
 }
 
 /* Scrollbar */
