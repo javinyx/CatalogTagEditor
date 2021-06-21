@@ -15,7 +15,7 @@
         <label>Password</label>
         <input type="password" name="pwd">
         <input type="submit" value="Login">
-        <span style="color: red" th:text="${session.loginError}">newCategoryError</span>
+        <span class="errormessage" th:text="${session.loginError}">newCategoryError</span>
     </form>
 </div>
 </body>

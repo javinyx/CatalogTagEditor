@@ -55,9 +55,19 @@ select option {
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }
 
+.errormessage {
+    margin-top: 1rem;
+    font-size: 1.4rem;
+    border-radius: 0.8rem;
+    background-color: #272727;
+    padding: 1rem 2rem;
+    color: red;
+    display: none;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 1rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -103,16 +113,6 @@ select option {
 
 #login-content label input {
     margin: 0 0 0 1em;
-}
-
-#errormessage {
-    margin-top: 1rem;
-    font-size: 14px;
-    border-radius: 8px;
-    background-color: #272727;
-    padding: 10px 20px;
-    color: red;
-    display: none;
 }
 
 /* Home Page *********************************************************************************************************/

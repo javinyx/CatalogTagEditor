@@ -15,7 +15,7 @@
 </header>
 <div id="content">
     <section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}"></section>
-    <span id="errormessage" th:text="${session.movementError}">movementError</span>
+    <span class="errormessage" th:text="${session.movementError}">movementError</span>
     <div id="create-category-div">
         <h4>Create Category</h4>
         <form th:action="@{/CreateCategory}" method="post">
@@ -29,7 +29,7 @@
                 </select>
             </label>
             <input type="submit" value="Create">
-            <span style="color: red" th:text="${session.newCategoryError}">newCategoryError</span>
+            <span class="errormessage" th:text="${session.newCategoryError}">newCategoryError</span>
         </form>
     </div>
 </div>
