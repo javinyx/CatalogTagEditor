@@ -57,7 +57,7 @@ select option {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 1rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -107,10 +107,10 @@ select option {
 
 #errormessage {
     margin-top: 1rem;
-    font-size: 14px;
-    border-radius: 8px;
+    font-size: 1.4rem;
+    border-radius: 0.8rem;
     background-color: #272727;
-    padding: 10px 20px;
+    padding: 1rem 2rem;
     color: red;
     display: none;
 }
