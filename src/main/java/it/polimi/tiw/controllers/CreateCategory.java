@@ -1,7 +1,7 @@
-package it.polimi.tiw.tiw_project_2020_21.controllers;
+package it.polimi.tiw.controllers;
 
-import it.polimi.tiw.tiw_project_2020_21.dao.CategoryDAO;
-import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
+import it.polimi.tiw.dao.CategoryDAO;
+import it.polimi.tiw.util.Initializer;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

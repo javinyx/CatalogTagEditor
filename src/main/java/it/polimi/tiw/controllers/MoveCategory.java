@@ -1,8 +1,8 @@
-package it.polimi.tiw.tiw_project_2020_21.controllers;
+package it.polimi.tiw.controllers;
 
-import it.polimi.tiw.tiw_project_2020_21.beans.Category;
-import it.polimi.tiw.tiw_project_2020_21.dao.CategoryDAO;
-import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
+import it.polimi.tiw.beans.Category;
+import it.polimi.tiw.dao.CategoryDAO;
+import it.polimi.tiw.util.Initializer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

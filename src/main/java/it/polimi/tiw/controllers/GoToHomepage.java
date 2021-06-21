@@ -1,7 +1,7 @@
-package it.polimi.tiw.tiw_project_2020_21.controllers;
-import it.polimi.tiw.tiw_project_2020_21.beans.Category;
-import it.polimi.tiw.tiw_project_2020_21.dao.CategoryDAO;
-import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
+package it.polimi.tiw.controllers;
+import it.polimi.tiw.beans.Category;
+import it.polimi.tiw.dao.CategoryDAO;
+import it.polimi.tiw.util.Initializer;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import javax.servlet.ServletException;
@@ -14,8 +14,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet(name = "GoToMoveCategory" ,value = "/GoToMoveCategory")
-public class GoToMoveCategory extends HttpServlet
+@WebServlet(name = "GoToHomepage" ,value = "/GoToHomepage")
+public class GoToHomepage extends HttpServlet
 {
     private static Connection connection;
     private static TemplateEngine templateEngine;
@@ -29,7 +29,6 @@ public class GoToMoveCategory extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //reload all for changes?
         ArrayList<Category> categories = null;
         try {
             CategoryDAO categoryDAO = new CategoryDAO(connection);
@@ -39,7 +38,7 @@ public class GoToMoveCategory extends HttpServlet
         }
         WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
         webContext.setVariable("categoryList", categories);
-        String path = "/moveCategory";
+        String path = "/index";
         templateEngine.process(path, webContext, response.getWriter());
     }
 

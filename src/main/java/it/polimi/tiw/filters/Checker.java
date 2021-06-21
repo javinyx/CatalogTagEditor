@@ -1,4 +1,4 @@
-package it.polimi.tiw.tiw_project_2020_21.filters;
+package it.polimi.tiw.filters;
 
 import java.io.IOException;
 import javax.servlet.Filter;

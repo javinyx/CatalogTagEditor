@@ -1,6 +1,6 @@
-package it.polimi.tiw.tiw_project_2020_21.dao;
+package it.polimi.tiw.dao;
 
-import it.polimi.tiw.tiw_project_2020_21.beans.User;
+import it.polimi.tiw.beans.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

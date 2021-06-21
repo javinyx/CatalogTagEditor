@@ -1,6 +1,6 @@
-package it.polimi.tiw.tiw_project_2020_21.controllers;
+package it.polimi.tiw.controllers;
 
-import it.polimi.tiw.tiw_project_2020_21.util.Initializer;
+import it.polimi.tiw.util.Initializer;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
 
 @WebServlet(name = "GoToLogin" ,value = "/GoToLogin")
 public class GoToLogin extends HttpServlet {

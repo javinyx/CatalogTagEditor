@@ -7,7 +7,7 @@
 
     <servlet>
         <servlet-name>GoToHomepage</servlet-name>
-        <servlet-class>it.polimi.tiw.tiw_project_2020_21.controllers.GoToHomepage</servlet-class>
+        <servlet-class>it.polimi.tiw.controllers.GoToHomepage</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>GoToHomepage</servlet-name>
@@ -38,7 +38,7 @@
 
     <filter>
         <filter-name>Checker</filter-name>
-        <filter-class>it.polimi.tiw.tiw_project_2020_21.filters.Checker</filter-class>
+        <filter-class>it.polimi.tiw.filters.Checker</filter-class>
     </filter>
 
     <filter-mapping>

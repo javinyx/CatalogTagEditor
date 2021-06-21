@@ -11,7 +11,7 @@
 <body>
 <header>
     <p id="welcome-message">Welcome</p>
-    <a id="logout-button">Logout</a>
+    <a id="logout-button" th:href="@{/Logout}">Logout</a>
 </header>
 <div id="content">
     <section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}"></section>

@@ -1,7 +1,6 @@
-package it.polimi.tiw.tiw_project_2020_21.beans;
+package it.polimi.tiw.beans;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Category
 {
