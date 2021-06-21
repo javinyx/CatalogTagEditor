@@ -48,7 +48,7 @@ public class CreateCategory extends HttpServlet {
         }
 
         CategoryDAO categoryDAO = new CategoryDAO(connection);
-        System.out.println();
+
         //check if name is not empty
         if (name.equals("") || name.length() > 50 || categoryParent == null) {
             session.setAttribute("newCategoryError", "New category name must not be empty");
