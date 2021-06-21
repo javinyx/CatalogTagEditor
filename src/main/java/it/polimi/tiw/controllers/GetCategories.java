@@ -15,7 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet(name = "GetCategories" ,value = "/GetCategories")
+@WebServlet(name = "GetCategories", value = "/GetCategories")
 public class GetCategories extends HttpServlet {
 
     private static Connection connection;
