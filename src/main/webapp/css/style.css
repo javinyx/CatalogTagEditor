@@ -137,6 +137,7 @@ header a, header p {
 
 #logout-button:hover {
     background-color: #6c3480;
+    cursor: pointer;
 }
 
 /* Content Section */
