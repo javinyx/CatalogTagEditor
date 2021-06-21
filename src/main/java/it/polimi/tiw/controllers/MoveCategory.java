@@ -71,7 +71,7 @@ public class MoveCategory extends HttpServlet
                 response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
                 return;
             }
-            categoryDAO.moveCategory(category.getDatabaseId(),  newParent.getDatabaseId());
+            categoryDAO.updateFather(category.getDatabaseId(),  newParent.getDatabaseId());
             session.removeAttribute("movementError");
         }catch (SQLException e)
         {
