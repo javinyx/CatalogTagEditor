@@ -1,27 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <link href="css/style.css" rel="stylesheet">
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Cataloging of Images</title>
 </head>
 <body>
-<section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
-<span style="color: red" th:text="${session.movementError}">movementError</span>
-<br>
-<h4><i>Create Category</i></h4>
-<form th:action="@{/CreateCategory}" method="post">
-  <label>Category name
-    <input type="text" name="categoryName" required>
-  </label>
-  <label>Parent Category
-    <select name="categoryParent">
-      <section th:insert="fragments/categoryDropdownFragment::category" th:with="maincategories=${categoryList}">ci dovrebbe essere qualcosa</section>
-    </select>
-  </label>
-  <input type="submit" value="create">
-  <br>
-  <span style="color: red" th:text="${session.newCategoryError}">newCategoryError</span>
-</form>
+<header>
+    <p id="welcome-message">Welcome</p>
+    <a id="logout-button">Logout</a>
+</header>
+<div id="content">
+    <section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}"></section>
+    <span id="errormessage" th:text="${session.movementError}">movementError</span>
+    <div id="create-category-div">
+        <h4>Create Category</h4>
+        <form th:action="@{/CreateCategory}" method="post">
+            <label>Category name:
+                <input type="text" name="categoryName" required>
+            </label>
+            <label>Parent Category:
+                <select name="categoryParent">
+                    <section th:insert="fragments/categoryDropdownFragment::category"
+                             th:with="maincategories=${categoryList}"></section>
+                </select>
+            </label>
+            <input type="submit" value="Create">
+            <span style="color: red" th:text="${session.newCategoryError}">newCategoryError</span>
+        </form>
+    </div>
+</div>
+<footer>
+    <p>Cataloging of Images - Made with <3 by Andrea Alesani, Davide Veronesi & Javin Barone</p>
+</footer>
 </body>
 </html>

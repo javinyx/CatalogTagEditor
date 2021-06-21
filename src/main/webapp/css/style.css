@@ -1,42 +1,191 @@
+/* Global Styles ******************************************************************************************************/
+html {
+    font-size: 62.5%; /* this is so we can use the 1rem = 10px conversion */
+}
+
 body {
-    max-width: 650px;
-    margin: 40px auto;
-    padding: 0 10px;
-    font: 18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    color: #444
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    margin: 0;
+    background: #444444;
 }
 
-h1,
-h2,
-h3 {
-    line-height: 1.2
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        color: white;
-        background: #444
-    }
-    a:link {
-        color: #5bf
-    }
-    a:visited {
-        color: #ccf
-    }
-}
-
-form [type=submit] {
-    background-color: #226b28; /* Green */
-    border: none;
-    border-radius: 8px;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
+a:link, a:visited, a:link:active, a:visited:active {
     text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
+    color: #ffffff;
 }
 
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+button, form [type=submit] {
+    margin: 0 auto;
+    background-color: #0aa49e;
+    border-radius: 0.8rem;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 2.0rem;
+    color: #ffffff;
+    transition: background-color 0.3s;
+}
+
+button:hover, form [type=submit]:hover {
+    background-color: #066763;
+    cursor: pointer;
+}
+
+select, form [type=text], form [type=password] {
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    font-size: 1.8rem;
+    height: auto;
+    margin: 0;
+    outline: 0;
+    padding: 0.5rem;
+    background-color: transparent;
+    color: #cfcfcf;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
+}
+
+select option {
+    background: #414141;
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #303030;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6d6d6d;
+    border-radius: 0.8rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555555;
+}
+
+/* Login Page *********************************************************************************************************/
+#login-content {
+    padding: 3rem;
+    background-color: #414141;
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    max-width: 480px;
+    margin: 10rem auto auto auto;
+    font-size: 2rem;
+    text-align: center;
+}
+
+#login-content label {
+    font-size: 1.8rem;
+}
+
+#login-content label {
+    margin-bottom: 1.5rem;
+}
+
+#login-content input[type=text], #login-content input[type=password] {
+    margin-bottom: 2.5rem;
+}
+
+#login-content label, #login-content form [type=submit] {
+    display: block;
+}
+
+#login-content label input {
+    margin: 0 0 0 1em;
+}
+
+#errormessage {
+    margin-top: 1rem;
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #272727;
+    padding: 10px 20px;
+    color: red;
+    display: none;
+}
+
+/* Home Page *********************************************************************************************************/
+
+/* Header Section */
+header {
+    font-size: 2.4rem;
+    background: #262626;
+    margin-bottom: 8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+header a, header p {
+    padding: 3rem 5rem;
+}
+
+#logout-button {
+    background-color: #2f2f2f;
+    transition: background-color 0.3s;
+}
+
+#logout-button:hover {
+    background-color: #6c3480;
+}
+
+/* Content Section */
+#content {
+    max-width: 960px;
+    margin: auto auto 8rem auto;
+    font-size: 2rem;
+}
+
+/* Move Section */
+
+/* Create Category Section */
+#create-category-div {
+    margin-top: 10rem;
+    background-color: #414141;
+    border: 1px solid #7a7a7a;
+    border-radius: 0.8rem;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+#create-category-div label {
+    font-size: 1.8rem;
+}
+
+#create-category-div h4 {
+    margin-bottom: 3rem;
+}
+
+#create-category-div label {
+    margin-bottom: 2rem;
+}
+
+#create-category-div label, #create-category-div form [type=submit] {
+    display: block;
+}
+
+#create-category-div label select, #create-category-div label input {
+    margin: 0 0 0 1em;
+}
+
+/* Footer Section */
+footer {
+    font-size: 1.5rem;
+    background: #262626;
+    text-align: center;
+    padding: 3.5rem 2rem;
+}
+/*
 table {
     text-align: left;
     border-spacing: 20px;
@@ -44,4 +193,4 @@ table {
 
 td {
     padding: 10px 0;
-}
+}*/

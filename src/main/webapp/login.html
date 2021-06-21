@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<!-- <link href="css/style.css" rel="stylesheet"> -->
 <head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <title>Login</title>
 </head>
 <body>
-<form th:action="@{/CheckLogin}" method="post">
-    username: <input type="text" name="username"> <br>
-    password: <input type="password" name="pwd"><br> <input type="submit" value="login">
-    <br>
-    <span style="color: red" th:text="${session.loginError}">newCategoryError</span>
-</form>
+<div id="login-content">
+    <form th:action="@{/CheckLogin}" method="post">
+        <label>Username</label>
+        <input type="text" name="username">
+        <label>Password</label>
+        <input type="password" name="pwd">
+        <input type="submit" value="Login">
+        <span style="color: red" th:text="${session.loginError}">newCategoryError</span>
+    </form>
+</div>
 </body>
 </html>
