@@ -35,15 +35,6 @@ button:hover, form [type=submit]:hover {
     cursor: pointer;
 }
 
-#errormessage {
-    font-size: 14px;
-    border-radius: 8px;
-    background-color: #272727;
-    padding: 10px 20px;
-    color: red;
-    display: none;
-}
-
 select, form [type=text], form [type=password] {
     border: 1px solid #7a7a7a;
     border-radius: 0.8rem;
@@ -62,6 +53,24 @@ select option {
     border: 1px solid #7a7a7a;
     border-radius: 0.8rem;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #303030;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6d6d6d;
+    border-radius: 0.8rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555555;
 }
 
 /* Login Page *********************************************************************************************************/
@@ -94,6 +103,16 @@ select option {
 
 #login-content label input {
     margin: 0 0 0 1em;
+}
+
+#errormessage {
+    margin-top: 1rem;
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #272727;
+    padding: 10px 20px;
+    color: red;
+    display: none;
 }
 
 /* Home Page *********************************************************************************************************/

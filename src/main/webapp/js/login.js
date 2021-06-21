@@ -14,7 +14,7 @@ $(document).ready(function() {
                 success: function(response) {
                     sessionStorage.setItem('username', username);
                     window.location.href = "index.html";
-                    document.getElementById("errormessage").textContent = "Logged in";
+                    document.getElementById("errormessage").textContent = "";
                     document.getElementById("errormessage").style.display = "inline-block";
                 },
                 error: function(req) {
