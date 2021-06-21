@@ -17,7 +17,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
-@WebServlet(value = "/MoveCategory")
+@WebServlet(name = "MoveCategory", value = "/MoveCategory")
 public class MoveCategory extends HttpServlet
 {
     private static Connection connection;
@@ -100,8 +100,7 @@ public class MoveCategory extends HttpServlet
 
 
         }
-        //TODO
-        // make queries
+
         //Tries to close connection from db after executing the query
         try {
             applyChanges();
