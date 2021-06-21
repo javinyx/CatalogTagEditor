@@ -65,6 +65,7 @@ public class MoveCategory extends HttpServlet
                     response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
 
                     revertChanges();
+                    closeConnection();
                     return;
                 }
 
@@ -74,6 +75,7 @@ public class MoveCategory extends HttpServlet
                     response.sendRedirect(getServletContext().getContextPath() + "/GoToHomePage");
 
                     revertChanges();
+                    closeConnection();
                     return;
                 }
                 Category oldParent;
@@ -93,22 +95,26 @@ public class MoveCategory extends HttpServlet
                 session.setAttribute("movementError", "Cannot apply changes to the server!");
                 try {
                     revertChanges();
+                    closeConnection();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
             }
-
-
         }
-
+        closeConnection();
         //Tries to close connection from db after executing the query
+
+        response.sendRedirect(getServletContext().getContextPath() + "/");
+    }
+
+    private void closeConnection()
+    {
         try {
             applyChanges();
             if (connection != null) {
                 connection.close();
             }
         } catch (SQLException ignored) {}
-        response.sendRedirect(getServletContext().getContextPath() + "/");
     }
 
     private void revertChanges() throws SQLException
