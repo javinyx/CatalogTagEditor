@@ -85,7 +85,7 @@ public class MoveCategory extends HttpServlet
                     oldParent = categoryDAO.findCategory(category.getId()/10, categories.get(0).getSubCategories());
                 categoryDAO.moveCategory(category, oldParent, newParent);
 
-                categoryDAO.updateFatherDatabase(category.getDatabaseId(),  newParent.getDatabaseId());
+                categoryDAO.updateFather(category.getDatabaseId(),  newParent.getDatabaseId());
                 session.removeAttribute("movementError");
             }catch (SQLException e)
             {
