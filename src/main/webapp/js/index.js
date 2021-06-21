@@ -15,6 +15,9 @@ $(document).ready(function () {
                 data: {"categoryName": categoryName, "categoryParent": categoryParent},
                 success: function (response) {
                     updateViewFromServer();
+                },
+                error:  function () {
+                    alert("Couldn't reach the endpoint");
                 }
             });
         }
@@ -29,7 +32,8 @@ $(document).ready(function () {
                 console.log('Logged out');
                 window.location.href = 'login.html';
             },
-            failure: function (response) {
+            failure: function (response)
+            {
                 window.location.href = 'login.html';
             }
         });
@@ -95,11 +99,13 @@ $(document).ready(function () {
     }, false);
 });
 
-function isParent(parentMoved, child) {
+function isParent(parentMoved, child)
+{
     return child.toString().startsWith(parentMoved.toString());
 }
 
-function printCategories(categoriesArray, parentElement, count) {
+function printCategories(categoriesArray, parentElement, count)
+{
     let categoriesList = document.createElement("ul");
     parentElement.appendChild(categoriesList);
     categoriesList.className = "category";
@@ -120,7 +126,8 @@ function printCategories(categoriesArray, parentElement, count) {
     }
 }
 
-function updateCategoriesIds(categoriesArray, count) {
+function updateCategoriesIds(categoriesArray, count)
+{
     for (let i = 0; i < categoriesArray.length; i++) {
         if (categoriesArray[i].id !== 0)
             categoriesArray[i].id = count * 10 + i + 1;
@@ -128,7 +135,8 @@ function updateCategoriesIds(categoriesArray, count) {
     }
 }
 
-function fillCategoriesDropdown(categoriesArray) {
+function fillCategoriesDropdown(categoriesArray)
+{
     let categoryDropdownSelect = document.getElementById("categoryParent");
     if (categoryDropdownSelect === null) {
         alert("categoryDropdownSelect is null");
@@ -142,7 +150,8 @@ function fillCategoriesDropdown(categoriesArray) {
     }
 }
 
-function updateViewFromServer() {
+function updateViewFromServer()
+{
     document.getElementById("category-list-div").innerHTML = "";
     document.getElementById("categoryParent").innerHTML = "";
     $.ajax({
@@ -233,7 +242,13 @@ function sendUpdatesToServer() {
         url: 'MoveCategory',
         data: {"changes": JSON.stringify(JSON.parse(sessionStorage.getItem('storedChanges'))['changes'])},
         success: function (response) {
+            alert("Categories updated correctly!")
             updateViewFromServer();
+        },
+        failure: function (response)
+        {
+            alert("Categories could not update!")
+            //updateViewFromServer();
         }
     });
 
