@@ -35,8 +35,8 @@ public class CreateCategory extends HttpServlet {
         }
         catch (Exception e)
         {
-            session.setAttribute("newCategoryError", "Parent value is not correct");
             response.setStatus(400);
+            response.getWriter().println("Parent value is not correct");
             return;
         }
 
@@ -51,7 +51,7 @@ public class CreateCategory extends HttpServlet {
 
         //check if name is not empty
         if (name.equals("") || name.length() > 50 || categoryParent == null) {
-            session.setAttribute("newCategoryError", "New category name must not be empty");
+            response.getWriter().println("Category name must not be empty");
             response.setStatus(400);
             return;
         }
@@ -61,19 +61,22 @@ public class CreateCategory extends HttpServlet {
             if(categoryDAO.findCategoryDatabaseId(parentDatabaseId, categoryDAO.findAllCategories()) == null)
             {
                 response.setStatus(400);
+                response.getWriter().println("Parent does not exists in database");
                 return;
             }
             //check if already exists a category with this name
             if (categoryDAO.alreadyExist(name))
             {
                 response.setStatus(400);
+                response.getWriter().println("Category already exists");
                 return;
             }
             categoryDAO.createNewCategory(name, parentDatabaseId);
         }
         catch (SQLException e) {
             e.printStackTrace();
-            response.setStatus(400);
+            response.setStatus(500);
+            response.getWriter().println("Internal server error");
             return;
         }
         response.setStatus(200);
