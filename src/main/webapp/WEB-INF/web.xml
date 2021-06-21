@@ -31,5 +31,6 @@
         <filter-name>Checker</filter-name>
         <servlet-name>CreateCategory</servlet-name>
         <url-pattern>/index.html</url-pattern>
+        <servlet-name>Logout</servlet-name>
     </filter-mapping>
 </web-app>
