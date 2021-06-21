@@ -20,13 +20,18 @@ $(document).ready(function () {
     })
 
     document.getElementById("logout-button").addEventListener("click", function () {
-        $.ajax({
+        handleLogout();
+        /*$.ajax({
             type: "POST",
             url: 'Logout',
             success: function (response) {
                 window.location.href = 'login.html';
+            },
+            failure: function (response)
+            {
+                window.location.href = 'login.html';
             }
-        });
+        });*/
     })
 
     document.getElementById("send-tree-changes").addEventListener("click", function () {
@@ -88,6 +93,11 @@ $(document).ready(function () {
         }
     }, false);
 });
+
+function handleLogout() {
+    sessionStorage.clear();
+    window.location.href = '/Logout';
+}
 
 function isParent(parentMoved, child)
 {
@@ -233,8 +243,6 @@ function sendUpdatesToServer() {
             updateViewFromServer();
         }
     });
-
-    alert(sessionStorage.getItem('storedChanges'));
     sessionStorage.setItem('storedChanges', '{"changes": []}');
     document.getElementById("send-tree-changes").style.display = "none";
 }
