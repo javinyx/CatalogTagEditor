@@ -147,7 +147,7 @@ header a, header p {
 
 /* Create Category Section */
 #create-category-div {
-    margin-top: 10rem;
+    margin: 10rem 2rem 0 2rem;
     background-color: #414141;
     border: 1px solid #7a7a7a;
     border-radius: 0.8rem;
