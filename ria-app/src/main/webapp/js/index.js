@@ -251,7 +251,13 @@ function sendUpdatesToServer() {
             //updateViewFromServer();
         }
     });
+<<<<<<< HEAD
+=======
 
+<<<<<<< HEAD:ria-app/src/main/webapp/js/index.js
+=======
+>>>>>>> d7d09cd (Bibo)
+>>>>>>> 79ebb35fcc288c516528beb0df52c33d6ac18bd9:src/main/webapp/js/index.js
     sessionStorage.setItem('storedChanges', '{"changes": []}');
     document.getElementById("send-tree-changes").style.display = "none";
 }
