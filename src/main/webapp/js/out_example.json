@@ -1,0 +1,42 @@
+[
+  {
+    "id": 0,
+    "databaseId": 0,
+    "name": "root",
+    "subCategories": [
+      {
+        "id": 1,
+        "databaseId": 1,
+        "name": "aa",
+        "subCategories": [
+          {
+            "id": 11,
+            "databaseId": 5,
+            "name": "awd",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "databaseId": 2,
+        "name": "dd",
+        "subCategories": [
+          {
+            "id": 21,
+            "databaseId": 4,
+            "name": "ad",
+            "subCategories": [
+              {
+                "id": 211,
+                "databaseId": 3,
+                "name": "aa",
+                "subCategories": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
