@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<section th:fragment="category">
+    <div th:each="cat : ${maincategories}">
+      <option th:value="${cat.getDatabaseId()}" th:text="${cat.getId()} + ' ' + ${cat.getName()}">Main Cat</option>
+      <section th:insert="fragments/categoryDropdownFragment :: category" th:with="maincategories=${cat.getSubCategories()}"></section>
+    </div>
+</section>
+</body>
+</html>

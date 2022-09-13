@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<section th:fragment="category">
+    <ul>
+        <li th:each="cat : ${maincategories}" th:with="found=(${#strings.startsWith(#strings.toString(cat.getId()), param.toMove)})? 'true'">
+            <span  th:style="${#strings.startsWith(#strings.toString(cat.getId()), param.toMove)}? 'color:red'" th:text="${cat.getId()} + '-' + ${cat.getName()}">Main Cat</span><a style="color : lightblue" th:text="${found}? '' : ' >>>move here'" th:href="${found}? '#': @{/MoveCategory(newParent=${cat.getDatabaseId()}, toMove=${param.toMoveId})}"> >>move here</a>
+            <section th:insert="fragments/categoryMoveFragment :: category" th:with="maincategories=${cat.getSubCategories()}, found=${found}"></section>
+        </li>
+    </ul>
+</section>
+</body>
+</html>

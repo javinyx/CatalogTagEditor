@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<<<<<<< HEAD
+<html lang="en">
+=======
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+>>>>>>> static-app/main
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+<<<<<<< HEAD
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/login.js"></script>
+=======
+>>>>>>> static-app/main
+    <title>Login</title>
+</head>
+<body>
+<div id="login-content">
+<<<<<<< HEAD
+    <form class="form-signin" action="CheckLogin" id="loginForm" method="post">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" placeholder="Username" required> <br>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="Password" required> <br>
+        <input class="button" id="loginbutton" type="submit" value="Login">
+        <p id="errormessage"></p>
+=======
+    <form th:action="@{/CheckLogin}" method="post">
+        <label>Username</label>
+        <input type="text" name="username">
+        <label>Password</label>
+        <input type="password" name="pwd">
+        <input type="submit" value="Login">
+        <span class="errormessage" th:text="${session.loginError}">newCategoryError</span>
+>>>>>>> static-app/main
+    </form>
+</div>
+</body>
+</html>

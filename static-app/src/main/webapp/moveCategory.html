@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Move Category</title>
+</head>
+<body>
+<header>
+    <p id="welcome-message">Select where to move the category</p>
+</header>
+<div id="content">
+    <section th:insert="fragments/categoryMoveFragment::category" th:with="maincategories=${categoryList}"></section>
+</div>
+<footer>
+    <p>Cataloging of Images - Made with <3 by Andrea Alesani, Davide Veronesi & Javin Barone</p>
+</footer>
+</body>
+</html>

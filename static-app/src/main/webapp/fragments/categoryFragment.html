@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<section th:fragment="category">
+  <ul>
+    <li th:each="cat : ${maincategories}">
+      <span th:text="${cat.getId()} + '-' + ${cat.getName()}">Main Cat</span><a th:text="${cat.getId}==0? '' : ' >>move'" style="color : blueviolet" th:href="@{/GoToMoveCategory(toMove=${cat.getId()}, toMoveId=${cat.getDatabaseId()})}"> >>move</a>
+      <section th:insert="fragments/categoryFragment :: category" th:with="maincategories=${cat.getSubCategories()}"></section>
+    </li>
+  </ul>
+</section>
+</body>
+</html>

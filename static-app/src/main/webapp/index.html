@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<<<<<<< HEAD
+<html lang="en">
+=======
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+>>>>>>> static-app/main
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+<<<<<<< HEAD
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/index.js"></script>
+=======
+>>>>>>> static-app/main
+    <meta charset="UTF-8">
+    <title>Cataloging of Images</title>
+</head>
+<body>
+<header>
+<<<<<<< HEAD
+    <p id="welcome-message"></p>
+    <a id="logout-button">Logout</a>
+</header>
+<div id="content">
+    <div id="category-list-div"></div>
+    <div id="create-category-div">
+        <h4>Create Category</h4>
+        <form id="create-category-form" name="create-category-form">
+            <label>Category name:
+                <input id="categoryName" type="text" name="categoryName" required>
+            </label>
+            <label>Parent Category:
+                <select id="categoryParent" name="categoryParent">
+                </select>
+            </label>
+            <input id="submit-category" type="submit" value="Create">
+        </form>
+        <button id="send-tree-changes" class="button">Apply changes</button>
+    </div>
+</div>
+<footer>
+    <p>Cataloging of Images - Made with ❤ by Andrea Alesani, Davide Veronesi & Javin Barone</p>
+=======
+    <p id="welcome-message">Welcome</p>
+    <a id="logout-button" th:href="@{/Logout}">Logout</a>
+</header>
+<div id="content">
+    <section th:insert="fragments/categoryFragment::category" th:with="maincategories=${categoryList}"></section>
+    <span class="errormessage" th:text="${session.movementError}">movementError</span>
+    <div id="create-category-div">
+        <h4>Create Category</h4>
+        <form th:action="@{/CreateCategory}" method="post">
+            <label>Category name:
+                <input type="text" name="categoryName" required>
+            </label>
+            <label>Parent Category:
+                <select name="categoryParent">
+                    <section th:insert="fragments/categoryDropdownFragment::category"
+                             th:with="maincategories=${categoryList}"></section>
+                </select>
+            </label>
+            <input type="submit" value="Create">
+            <span class="errormessage" th:text="${session.newCategoryError}">newCategoryError</span>
+        </form>
+    </div>
+</div>
+<footer>
+    <p>Cataloging of Images - Made with <3 by Andrea Alesani, Davide Veronesi & Javin Barone</p>
+>>>>>>> static-app/main
+</footer>
+</body>
+</html>
